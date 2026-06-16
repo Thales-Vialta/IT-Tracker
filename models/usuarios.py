@@ -1,4 +1,4 @@
-from .cargo import Cargo
+from .cargoService import Cargo
 
 class Usuario:
     def __init__(self,nomeUsuario:str, cargo: Cargo):
