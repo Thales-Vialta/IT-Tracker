@@ -2,10 +2,6 @@
 __pycache__/
 *.pyc
 
-# Ignorar pastas de ambientes virtuais (caso você use venv no futuro)
-venv/
-.venv/
-
 # Ignorar arquivos ocultos do VS Code que salvam suas preferências pessoais
 .vscode/
 
@@ -15,3 +11,5 @@ Thumbs.db
 
 # Dados sensiveis
 .env
+
+
