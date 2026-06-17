@@ -10,3 +10,4 @@ class aparelhosfactory:
         
         else:
             return Aparelhos(serial=serial,statusAparelho="1",idModelo = idModelo)
+        
