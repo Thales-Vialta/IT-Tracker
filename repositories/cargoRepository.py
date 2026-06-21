@@ -3,7 +3,7 @@ from models.usuarios import *
 
 class UsuarioRepository:
 
-    def inserir_usuario(self, usuario):
+    def inserir_cargo(self, usuario):
         conn = DatabaseConnector().get_connection()
 
         try:
@@ -25,7 +25,7 @@ class UsuarioRepository:
             cursor.close()
             conn.close()
 
-    def Consulta_template(): 
+    def Consulta_template(self): 
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
@@ -34,20 +34,11 @@ class UsuarioRepository:
             FROM Usuario u
             JOIN Cargo c ON u.ID_Cargo = c.ID_Cargo
             WHERE u.ID_Usuario = %s
-        """, (usuario.id_usuario,))
-            resultado = cursor.fetchall()
-            return resultado
+        """, ((usuario.id_usuario,),))
         finally: 
             cursor.close()
             conn.close()
 
-repo = UsuarioRepository()
+usuario1 = UsuarioRepository.inserir_usuario('Thales',1)
 
-usuario = usuario(
-    nome_usuario="Thales",
-    id_cargo=1
-)
-
-repo.inserir_usuario(usuario)
-
-print(usuario)
+print(usuario1)

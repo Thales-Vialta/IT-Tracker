@@ -1,0 +1,12 @@
+class cargo: 
+        def __init__(self,Descricao_cargo:str):
+        
+                self.__idCargo = None
+                self.__Descricao_cargo = Descricao_cargo
+
+        @property
+        def Desc_cargo(self): 
+                return self.__Descricao_cargo
+
+        def __str__(self):
+                 return f"ID_Cargo: {self.__idCargo} | Cargo: {self.Desc_cargo}"
