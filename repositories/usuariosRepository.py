@@ -55,7 +55,7 @@ class UsuarioRepository:
                 cursor.close()
                 conn.close()
 
-    def buscarUsuario(self):
+    def buscarUsuario(self,usuario):
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
