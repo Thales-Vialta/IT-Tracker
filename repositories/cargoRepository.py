@@ -16,4 +16,7 @@ class CargoRepository:
                 cursor.close()
                 conn.close()
 
+    def buscarCargoPorId(cargo:str):
+          pass
+
 repo = CargoRepository()

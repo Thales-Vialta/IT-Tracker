@@ -1,5 +1,5 @@
 from models.cargos import cargo
-class usuario:
+class Usuario:
     def __init__(self,nomeUsuario:str, cargo: cargo):
 
         self.__idUsuario = None

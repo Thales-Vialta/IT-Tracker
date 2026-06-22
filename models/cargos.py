@@ -1,4 +1,4 @@
-class cargo: 
+class Cargo: 
         def __init__(self,Descricao_cargo:str):
         
                 self.__idCargo = None
