@@ -3,7 +3,7 @@ from models.aparelhos import *
 
 class AparelhoRepository:
 
-    def inserir_cargo(self, Aparelhos):
+    def inserir_aparelho(self, Aparelhos):
         conn = DatabaseConnector().get_connection()
 
         try:
@@ -40,7 +40,30 @@ class AparelhoRepository:
         finally: 
             cursor.close()
             conn.close()
+    def Editar_Aparelho(self): 
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute("""UPDATE Aparelhos 
+                           SET patrimonio = %s, idModelo = %s 
+                           WHERE id = %s""",(Aparelhos.serial,Aparelhos.idModelo,Aparelhos.statusAparelho))
+            resultado = cursor.fetchall()
+            return resultado 
+        finally: 
+            cursor.close()
+            conn.close()
+            
+    def Deletar_Aparelho(self): 
+            conn = DatabaseConnector().get_connection()
+            try: 
+                cursor = conn.cursor()
+                cursor.execute("""Delete from Aparelhos 
+                               WHERE id_Aparelho = %s""",(Aparelhos.statusAparelho))
+                resultado = cursor.fetchall()
+                return resultado 
+            finally: 
+                cursor.close()
+                conn.close()
 repo = AparelhoRepository()
-
 for serial in repo.Aparelho_mais_utilizado():
     print(f"{serial}")
