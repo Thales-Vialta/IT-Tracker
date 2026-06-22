@@ -42,7 +42,7 @@ class UsuarioRepository:
             cursor.close()
             conn.close()
 
-    def listarUsuarios():
+    def listarUsuarios(self):
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
@@ -67,6 +67,14 @@ class UsuarioRepository:
         finally:
             cursor.close()
             conn.close()
+
+    def editarUsuario(self, atributo:str, valor:str):
+         pass
+    
+    def removerUsuario(self,nomeUsuario):
+
+         pass
+         
         
     
 repo = UsuarioRepository()

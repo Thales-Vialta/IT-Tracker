@@ -3,7 +3,7 @@ from models.cargos import *
 
 class CargoRepository:
 
-    def listarUsuarios():
+    def listarCargos():
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
@@ -16,7 +16,7 @@ class CargoRepository:
                 cursor.close()
                 conn.close()
 
-    def buscarCargoPorId(cargo:str):
+    def buscarIdCargo(cargo:str):
           pass
 
 repo = CargoRepository()
