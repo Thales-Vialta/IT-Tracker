@@ -6,12 +6,12 @@ class HorarioRepository:
         try:
             cursor = conn.cursor()     
             cursor.execute("""
-                        INSERT INTO HoraFunc
+                        INSERT INTO HorarioFunc
                         (Descricao,HoraInicio,HoraFim)
                         VALUES (%s,%s,%s)
                     """,
                     (
-                        horafunc.HoraInicio,horafunc.HoraFim
+                        horafunc.Descricao,horafunc.HoraInicio,horafunc.HoraFim
                     ))
         
             conn.commit()
@@ -23,10 +23,14 @@ class HorarioRepository:
         try:
             cursor = conn.cursor()     
             cursor.execute("""
-                        SELECT * FROM HoraFunc
+                        SELECT HoraInicio, HoraFim, Descricao FROM HorarioFunc
                     """)
         
-            conn.commit()
+            return cursor.fetchall()
         finally:
             cursor.close()
             conn.close()
+repo = HorarioRepository()
+
+for HoraInicio, HoraFim, Descricao in repo.Listar_Horario():
+    print(f"+==========Lista de Horários==========+\n{Descricao} | {HoraInicio} - {HoraFim}")

@@ -43,13 +43,31 @@ class UsuarioRepository:
             conn.close()
 
     def listarUsuarios():
-        # retorna usuarios
-        pass
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute('''Select Nome_Usuario from Usuario Order by Nome_Usuario''')
+            resultado = cursor.fetchall()
+            return resultado
+        except ValueError: 
+                print("Erro! Nome vazio")
+        finally:
+                cursor.close()
+                conn.close()
 
-    def buscarUsuario():
-
-        # retorna os dados do usuario senão envia 'false'
-        pass
+    def buscarUsuario(self):
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute('''Select * from Usuario where Nome_Usuario like %s''',(usuario.nome_usuario))
+            resultado = cursor.fetchall()
+            return resultado
+        except ValueError: 
+                print("Erro! Nome vazio")
+        finally:
+            cursor.close()
+            conn.close()
+        
     
 repo = UsuarioRepository()
 
