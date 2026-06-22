@@ -34,3 +34,6 @@ print(conn)
 
 if conn.is_connected():
     print("Banco conectado!")
+
+
+    

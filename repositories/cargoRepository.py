@@ -1,26 +1,28 @@
 from dbConnector.Database import DatabaseConnector
 from models.cargos import *
 
-class CargoRepository:
+# ELE DEVERIA LISTAR OS CARGOS (CORRIGI NO TRELLO)
 
-    def inserir_cargo(self, cargo):
-        conn = DatabaseConnector().get_connection()
+# class CargoRepository:
 
-        try:
-            cursor = conn.cursor()
+#     def inserir_cargo(self, cargo):
+#         conn = DatabaseConnector().get_connection()
 
-            cursor.execute("""
-                INSERT INTO Cargo
-                (Cargos)
-                VALUES (%s)
-            """,
-            (
-                cargo.Desc_cargo
-            ))
+#         try:
+#             cursor = conn.cursor()
 
-            conn.commit()
+#             cursor.execute("""
+#                 INSERT INTO Cargo
+#                 (Cargos)
+#                 VALUES (%s)
+#             """,
+#             (
+#                 cargo.Desc_cargo
+#             ))
 
-        finally:
-            cursor.close()
-            conn.close()
+#             conn.commit()
+
+#         finally:
+#             cursor.close()
+#             conn.close()
 

@@ -41,8 +41,18 @@ class UsuarioRepository:
         finally: 
             cursor.close()
             conn.close()
+
+    def listarUsuarios():
+        # retorna usuarios
+        pass
+
+    def buscarUsuario():
+
+        # retorna os dados do usuario senão envia 'false'
+        pass
     
 repo = UsuarioRepository()
 
 for id_usuario, nome in repo.Usuario_Nunca_Alocou():
     print(f"{id_usuario} - {nome}")
+
