@@ -1,4 +1,4 @@
-from cargos import cargo
+from models.cargos import cargo
 class usuario:
     def __init__(self,nomeUsuario:str, cargo: cargo):
 

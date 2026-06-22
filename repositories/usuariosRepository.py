@@ -25,29 +25,24 @@ class UsuarioRepository:
             cursor.close()
             conn.close()
 
-    def Consulta_template(): 
+    def Usuario_Nunca_Alocou(self): 
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
 
-            cursor.execute("""SELECT u.ID_Usuario, u.Nome_Usuario,c.Nome_Cargo
-            FROM Usuario u
-            JOIN Cargo c ON u.ID_Cargo = c.ID_Cargo
-            WHERE u.ID_Usuario = %s
-        """, (usuario.id_usuario,))
+            cursor.execute("""SELECT idUsuario, Nome_Usuario AS Usuario_Nunca_Alocou
+            FROM Usuario
+            WHERE idUsuario NOT IN (
+            SELECT idUsuario
+            FROM Alocacao)""")
             resultado = cursor.fetchall()
             return resultado
+            
         finally: 
             cursor.close()
             conn.close()
-
+    
 repo = UsuarioRepository()
 
-usuario = usuario(
-    nome_usuario="Thales",
-    id_cargo=1
-)
-
-repo.inserir_usuario(usuario)
-
-print(usuario)
+for id_usuario, nome in repo.Usuario_Nunca_Alocou():
+    print(f"{id_usuario} - {nome}")
