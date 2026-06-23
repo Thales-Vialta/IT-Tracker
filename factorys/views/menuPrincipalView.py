@@ -5,20 +5,10 @@ class menuPrincipalView:
     def limpar_tela (self):
         system('cls')
 
-    def titulo(self):
-        it_tracker_logo = """
-        ██  ███████     ████████  ███████   ██████    ███████  ██   ██  ████████  ███████  
-        ██     ██          ██     ██   ██  ██    ██  ██        ██  ██   ██        ██   ██  
-        ██     ██          ██     ███████  ████████  ██        █████    ██████    ███████  
-        ██     ██          ██     ██  ██   ██    ██  ██        ██  ██   ██        ██  ██   
-        ██     ██          ██     ██   ██  ██    ██   ██████   ██   ██  ████████  ██   ██  
-        """
-        print(it_tracker_logo)
-
     def menu_principal(self):
         while True:
             self.limpar_tela()
-            self.titulo()
+            print("IT-TRACKER - MENU PRINCIPAL\n")
 
             opcao = questionary.select(
                 "Selecione uma opção:",

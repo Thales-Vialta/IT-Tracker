@@ -1,0 +1,15 @@
+# Ignorar a pasta de cache do Python (em qualquer lugar do projeto)
+__pycache__/
+*.pyc
+
+# Ignorar arquivos ocultos do VS Code que salvam suas preferências pessoais
+.vscode/
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Dados sensiveis
+.env
+
+
