@@ -1,10 +1,12 @@
 import questionary
 from os import system
+from views.cores import CORES
+from views.cores import minhas_cores
+from views.limparTela import limpar_tela
+from views.configView import configView
+from views.visualReservasView import visualizarReservasView
 
 class menuPrincipalView:
-    def limpar_tela (self):
-        system('cls')
-
     def titulo(self):
         it_tracker_logo = """
         ██  ███████     ████████  ███████   ██████    ███████  ██   ██  ████████  ███████  
@@ -13,15 +15,18 @@ class menuPrincipalView:
         ██     ██          ██     ██  ██   ██    ██  ██        ██  ██   ██        ██  ██   
         ██     ██          ██     ██   ██  ██    ██   ██████   ██   ██  ████████  ██   ██  
         """
-        print(it_tracker_logo)
+        print(f"{CORES['AZUL']}{it_tracker_logo}{CORES['RESET']}")
 
     def menu_principal(self):
         while True:
-            self.limpar_tela()
+            limpar_tela()
             self.titulo()
 
             opcao = questionary.select(
                 "Selecione uma opção:",
+                instruction=" ",
+                qmark="",
+                style=minhas_cores,
                 choices=[
                     "Visualizar Reservas",
                     "Gerenciar Reservas",
@@ -33,20 +38,20 @@ class menuPrincipalView:
             ).ask()
 
             if opcao == "Visualizar Reservas":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+                from views.visualReservasView import visualizarReservasView 
+                visualizarReservasView().visualizarReservas()
             elif opcao == "Gerenciar Reservas":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
+                from views.gerenciarReservasView import gerenciarReservasView 
+                gerenciarReservasView().gerenciar_reservas()
             elif opcao == "Gerenciar Dispositivos":
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
+                from views.gerenciarDispositivosView import gerenciarDispositivosView 
+                gerenciarDispositivosView().gerenciar_dispositivos()
             elif opcao == "Manutenção":
                 print("Manutenção em desenvolvimento")
                 input("enter")
             elif opcao == "Configurações":
-                print("Configurações em desenvolvimento")
-                input("enter")
+                from views.configView import configView  
+                configView().config()
             elif opcao == "Sair":
                 print("Saindo")
                 break

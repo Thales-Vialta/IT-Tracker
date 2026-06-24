@@ -1,5 +1,9 @@
-from menuPrincipalView import limpar_tela() """não lembro como faz"""
+import questionary
+from os import system
+from views.cores import CORES
+from views.cores import minhas_cores
 
 class visualizarReservasView:
     def visualizarReservas(self):
-        self.limpar_tela() """não lembro como faz"""
+        print("Tela de Visualizar Reservas")
+        input("Pressione Enter para voltar...")
