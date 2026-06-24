@@ -5,7 +5,6 @@ class ModeloRepository:
 
     def inserir_Modelo(self, Modelo):
         conn = DatabaseConnector().get_connection()
-
         try:
             cursor = conn.cursor()
 
@@ -18,14 +17,12 @@ class ModeloRepository:
                 Modelo.Marca,
                 Modelo.Modelo_do_Aparelho
             ))
-
             conn.commit()
-
         finally:
             cursor.close()
             conn.close()
 
-    def Aparelhos_menos_Alocados(self): 
+    def Aparelhos_menos_Alocados(self):
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
@@ -38,12 +35,11 @@ class ModeloRepository:
             ORDER BY Aparelhos_menos_Alocados;""")
             resultado = cursor.fetchall()
             return resultado
-            
-        finally: 
+        finally:
             cursor.close()
             conn.close()
     
-    def Editar_Modelo(self,Modelo): 
+    def Editar_Modelo(self,Modelo):
             conn = DatabaseConnector().get_connection()
             try: 
                 cursor = conn.cursor()
@@ -56,7 +52,7 @@ class ModeloRepository:
                 cursor.close()
                 conn.close()
 
-    def Deletar_Aparelho(self,Modelo): 
+    def Deletar_Aparelho(self,Modelo):
                 conn = DatabaseConnector().get_connection()
                 try: 
                     cursor = conn.cursor()

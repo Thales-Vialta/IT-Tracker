@@ -1,7 +1,9 @@
 from dbConnector.Database import DatabaseConnector
 
-class salaRepository: 
-    def Inserir_Sala(self, sala): 
+
+class salaRepository:
+
+    def Inserir_Horario(self, sala): 
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()     

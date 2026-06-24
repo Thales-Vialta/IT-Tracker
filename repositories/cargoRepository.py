@@ -29,7 +29,6 @@ class CargoRepository:
             except Exception as e: 
                 print("Erro! ",e)
             finally:
-                
                 conn.close()
-                
+
 repo = CargoRepository()

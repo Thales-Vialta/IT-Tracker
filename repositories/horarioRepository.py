@@ -1,6 +1,7 @@
 from dbConnector.Database import DatabaseConnector
 
-class HorarioRepository: 
+class HorarioRepository:
+
     def Inserir_Horario(self, horafunc): 
         conn = DatabaseConnector().get_connection()
         try:
@@ -13,11 +14,11 @@ class HorarioRepository:
                     (
                         horafunc.Descricao,horafunc.HoraInicio,horafunc.HoraFim
                     ))
-        
             conn.commit()
         finally:
             cursor.close()
             conn.close()
+
     def Listar_Horario(self):
         conn = DatabaseConnector().get_connection()
         try:
@@ -30,6 +31,6 @@ class HorarioRepository:
         finally:
             cursor.close()
             conn.close()
-repo = HorarioRepository()
 
+repo = HorarioRepository()
 

@@ -4,7 +4,6 @@ class UsuarioRepository:
 
     def inserir_usuario(self, nome_usuario: str, id_cargo: int):
         conn = DatabaseConnector().get_connection()
-
         try:
             cursor = conn.cursor()
 
@@ -36,7 +35,6 @@ class UsuarioRepository:
             FROM Alocacao)""")
             resultado = cursor.fetchall()
             return resultado
-            
         finally: 
             cursor.close()
             conn.close()
@@ -87,8 +85,3 @@ class UsuarioRepository:
            finally:
                cursor.close()
                conn.close()
-         
-        
-    
-
-

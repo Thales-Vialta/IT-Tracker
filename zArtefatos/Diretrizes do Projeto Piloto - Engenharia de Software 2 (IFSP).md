@@ -40,4 +40,3 @@ O projeto adota uma estrutura de entregas incrementais dividida em 6 Sprints seq
 | **Sprint 4** 24/06/2026 | Construção e Incremento: Continuidade das atividades de desenvolvimento de código Rodadas de testes técnicos. | Apresentação de acompanhamento e evolução de software. |
 | **Sprint 5** 01/07/2026 | Construção e Refinamento: Finalização dos blocos principais de desenvolvimento de funcionalidades Execução de testes. | Apresentação dos incrementos gerados pela equipe. |
 | **Sprint 6** 08/07/2026 | Apresentação Final: Consolidação final do desenvolvimento Encerramento de testes Fechamento de toda documentação associada do sistema. | Apresentação Final do produto com tempo estimado entre 15 e 20 minutos. |
-
