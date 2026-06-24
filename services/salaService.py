@@ -10,23 +10,25 @@ class salaService:
         return self.sala_repo.listarSalas()
 
     def buscarSalas(self, nome: str):
-        sala = " ".join(nome.split()).title()
-        return self.sala_repo.buscarSala(sala)
+        return self.sala_repo.buscarSala(nome)
 
     def existeSala(self, NomeSala: str):
         if not self.buscarSalas(NomeSala):
+            #sala não existe e pode cadastrar uma nova
+            
             return True
         else:
+            #sala existe e não pode cadastrar uma nova
             return False
 
-    def cadastrarSalas(self, NomeSala: str, EnderecoSala: str):
+    def cadastrarSalas(self,idSala:int, NomeSala: str, EnderecoSala: str):
         validacao = self.existeSala(NomeSala)
         if not validacao:
             return "Sala já cadastrada!"
         else:
-            nova_sala = Sala(NomeSala, EnderecoSala)
+            nova_sala = Sala(idSala,NomeSala, EnderecoSala,)
             self.sala_repo.Inserir_Horario(nova_sala)
-            return "Sala cadastrada com sucesso!"
+            return "tentando cadastrar sala"
 
     def removerSalas(self, NomeSala: str):
         validacao = self.existeSala(NomeSala)

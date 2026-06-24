@@ -1,20 +1,22 @@
 from dbConnector.Database import DatabaseConnector
 
 class salaRepository: 
-    def Inserir_Horario(self, sala): 
+    def Inserir_Sala(self, sala): 
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()     
             cursor.execute("""
-                        INSERT INTO HoraFunc
-                        (NomeSala,EnderecoSala)
-                        VALUES (%s,%s)
+                        INSERT INTO Sala
+                        (idSala,NomeSala,EnderecoSala)
+                        VALUES (%s,%s,%s)
                     """,
                     (
-                        sala.NomeSala,sala.EnderecoSala
+                        sala.idSala,sala.NomeSala,sala.EnderecoSala
                     ))
-        
+            print('sala cadastrada com sucesso')
             conn.commit()
+        except Exception as e:
+            print(f"Erro ao inserir sala: {e}")
         finally:
             cursor.close()
             conn.close()

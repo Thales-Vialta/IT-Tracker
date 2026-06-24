@@ -20,8 +20,9 @@ class CargoRepository:
             try: 
                 with conn.cursor() as cursor:
                     cursor.execute('''SELECT ID_Cargo FROM Cargo WHERE Cargos = %s''', (cargo,))
-                    resultado = cursor.fetchall()
-                    return resultado if resultado else None
+                    resultado = cursor.fetchone()
+                    print(resultado)
+                    return resultado[0] if resultado else None
                 
             except ValueError: 
                 print("Erro! Nome vazio")

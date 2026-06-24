@@ -32,5 +32,4 @@ class HorarioRepository:
             conn.close()
 repo = HorarioRepository()
 
-for HoraInicio, HoraFim, Descricao in repo.Listar_Horario():
-    print(f"+==========Lista de Horários==========+\n{Descricao} | {HoraInicio} - {HoraFim}")
+

@@ -11,18 +11,24 @@ class usuarioService:
     def validarUsuario(self, nomeUsuario):
         if not self.usuario_repo.buscarUsuario(nomeUsuario):
             # Se buscar usuário e não encontrar, usuário foi validado e não existe
+            print('User não existe')
             return True
         else:
             # Se encontrar algo, usuário foi validado e existe
+            print('user existe')
             return False
 
     def cadastrarUsuario(self, nomeUsuario: str, cargo: str):
+        print('Entrou no cadastro')
         validacao = self.validarUsuario(nomeUsuario)
+        print(f'puxou validação {validacao}')
 
         if not validacao:
+            print('entrou no if')
             return "Usuário já cadastrado!"
         
         else:
+            print('entrou no else')
             idCargo = self.cargo_service.capturarIdCargo(cargo) 
                       
             self.usuario_repo.inserir_usuario(nomeUsuario, idCargo)

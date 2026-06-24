@@ -6,6 +6,7 @@ class CargoService:
         self.cargo_repo = cargo_repository
 
     def capturarCargos(self):
+        print('entrou em capturar cargos')
         return self.cargo_repo.listarCargos()
     
     def capturarIdCargo(self,cargo:str):

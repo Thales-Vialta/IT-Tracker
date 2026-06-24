@@ -1,9 +1,8 @@
 from dbConnector.Database import DatabaseConnector
-from models.usuarios import *
 
 class UsuarioRepository:
 
-    def inserir_usuario(self, Usuario):
+    def inserir_usuario(self, nome_usuario: str, id_cargo: int):
         conn = DatabaseConnector().get_connection()
 
         try:
@@ -15,12 +14,12 @@ class UsuarioRepository:
                 VALUES (%s, %s)
             """,
             (
-                Usuario.nome_usuario,
-                Usuario.id_cargo
+                nome_usuario,
+                id_cargo
             ))
-
             conn.commit()
-
+        except Exception as e:
+            print(f"Erro ao inserir usuário: {e}")
         finally:
             cursor.close()
             conn.close()
@@ -55,11 +54,11 @@ class UsuarioRepository:
                 cursor.close()
                 conn.close()
 
-    def buscarUsuario(self,Usuario):
+    def buscarUsuario(self, nome_usuario: str):
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
-            cursor.execute('''Select * from Usuario where Nome_Usuario like %s''',(Usuario.nome_usuario))
+            cursor.execute('''Select * from Usuario where Nome_Usuario like %s''',(nome_usuario,))
             resultado = cursor.fetchall()
             return resultado
         except ValueError: 
@@ -68,22 +67,22 @@ class UsuarioRepository:
             cursor.close()
             conn.close()
 
-    def removerUsuario(self, Usuario):
+    def removerUsuario(self, nome_usuario: str):
            conn = DatabaseConnector().get_connection()
            try:
                cursor = conn.cursor()
-               cursor.execute('''DELETE FROM Usuario WHERE Nome_Usuario = %s''', (Usuario.nome_usuario,))
+               cursor.execute('''DELETE FROM Usuario WHERE Nome_Usuario = %s''', (nome_usuario,))
                conn.commit()
            finally:
                cursor.close()
                conn.close()
    
-    def editarUsuario(self, nome_sala: str, atributo: str, valor: str):
+    def editarUsuario(self, nome_usuario: str, atributo: str, valor: str):
            conn = DatabaseConnector().get_connection()
            try:
                cursor = conn.cursor()
-               query = f"UPDATE Sala SET {atributo} = %s WHERE NomeSala = %s"
-               cursor.execute(query, (valor, nome_sala))
+               query = f"UPDATE Usuario SET {atributo} = %s WHERE Nome_Usuario = %s"
+               cursor.execute(query, (valor, nome_usuario))
                conn.commit()
            finally:
                cursor.close()
