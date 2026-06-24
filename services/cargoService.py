@@ -10,7 +10,3 @@ class CargoService:
     
     def capturarIdCargo(self,cargo:str):
         return self.cargo_repo.buscarIdCargo(cargo)
-
-
-        
-    
