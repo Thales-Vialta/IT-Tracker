@@ -19,7 +19,7 @@ repo_Usuario = UsuarioRepository()
 serv_Usuario = usuarioService(repo_Usuario,servCargo)
 
 # TESTE CARGOS
-print('TESTE CARGOS')
+"""print('TESTE CARGOS')
 cargoAleatorio = 'Professor'
 
 cargos = servCargo.capturarCargos()
@@ -31,7 +31,7 @@ print()
 print()
 print()
 print()
-print()
+print()"""
 
 # TESTE USUÁRIOS
 print('TESTE USUARIOS')
@@ -40,7 +40,7 @@ serv_Usuario = usuarioService(repo_Usuario,servCargo)
 userCap = serv_Usuario.listarUsuarios() 
 print(userCap)
 
-print(serv_Usuario.cadastrarUsuario('João', 'Professor')) 
+"""print(serv_Usuario.cadastrarUsuario('João', 'Professor')) 
 print()
 print()
 search_user = serv_Usuario.buscaUsuario('Joana de Oliveira Stekel') #retornou lista vazia
@@ -90,7 +90,7 @@ print()
 print('TESTE HORARIOS')
 
 hora = servHora.listarHorarios()
-print(hora)
+print(hora)"""
 
 
 

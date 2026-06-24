@@ -32,7 +32,14 @@ class usuarioService:
             return "Usuário cadastrado com sucesso!"
         
     def listarUsuarios(self):
-        return self.usuario_repo.listarUsuarios()
+        usuarios = self.usuario_repo.listarUsuarios()
+        resultado = "+==========Lista de Usuários==========+\n"
+    
+        for usuario in usuarios:
+            nome = usuario[0]
+            resultado += f"Usuário: {nome}\n"
+            
+        return resultado
     
     def buscaUsuario(self,nome):
         usuario = " ".join(nome.split()).title()
@@ -64,3 +71,5 @@ class usuarioService:
         else:
             self.usuario_repo.removerUsuario(nomeUsuario)
             return "Usuário removido com sucesso!"
+        
+
