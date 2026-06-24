@@ -3,6 +3,11 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from services.userService import usuarioService
+from repositories.usuariosRepository import userRepo
+from services.cargoService import cargoService
+from views.criarNovoUsuarioView import CriarNovoUsuarioView
+
 class gerenciarUsuariosView:
 
     def gerenciar_usuarios(self):
@@ -25,11 +30,10 @@ class gerenciarUsuariosView:
             ).ask()
 
             if opcao == "Ver Usuários Cadastrados":
-                from services.userService import usuarioService 
-                usuarioService().listarUsuarios()
+                print(usuarioService(userRepo, cargoService).listarUsuarios())
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Usuário":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
+               CriarNovoUsuarioView().criar_usuario()
             elif opcao == "Editar Usuários": 
                 print("Gerenciar aparelhos em desenvolvimento")
                 input("enter")

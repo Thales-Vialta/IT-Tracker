@@ -3,8 +3,11 @@ from os import system
 from views.cores import CORES
 from views.cores import minhas_cores
 from views.limparTela import limpar_tela
+
 from views.configView import configView
 from views.visualReservasView import visualizarReservasView
+from views.gerenciarReservasView import gerenciarReservasView 
+from views.gerenciarDispositivosView import gerenciarDispositivosView
 
 class menuPrincipalView:
     def titulo(self):
@@ -38,19 +41,15 @@ class menuPrincipalView:
             ).ask()
 
             if opcao == "Visualizar Reservas":
-                from views.visualReservasView import visualizarReservasView 
                 visualizarReservasView().visualizarReservas()
             elif opcao == "Gerenciar Reservas":
-                from views.gerenciarReservasView import gerenciarReservasView 
                 gerenciarReservasView().gerenciar_reservas()
             elif opcao == "Gerenciar Dispositivos":
-                from views.gerenciarDispositivosView import gerenciarDispositivosView 
                 gerenciarDispositivosView().gerenciar_dispositivos()
             elif opcao == "Manutenção":
                 print("Manutenção em desenvolvimento")
                 input("enter")
             elif opcao == "Configurações":
-                from views.configView import configView  
                 configView().config()
             elif opcao == "Sair":
                 print("Saindo")

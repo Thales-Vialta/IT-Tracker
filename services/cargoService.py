@@ -1,13 +1,15 @@
-from repositories.cargoRepository import CargoRepository
+from repositories.cargoRepository import repo
 
 class CargoService:
 
-    def __init__(self, cargo_repository):
-        self.cargo_repo = cargo_repository
+    def __init__(self, repo):
+        self.cargo_repo = repo
 
     def capturarCargos(self):
-        print('entrou em capturar cargos')
         return self.cargo_repo.listarCargos()
     
     def buscarIdCargo(self,cargo:str):
         return self.cargo_repo.buscarIdCargo(cargo)
+    
+
+cargoService = CargoService(repo)

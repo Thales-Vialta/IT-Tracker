@@ -1,6 +1,10 @@
+from views.limparTela import limpar_tela
+from views.cores import CORES
+
 from models.usuarios import Usuario
-from repositories.usuariosRepository import UsuarioRepository
-from services.cargoService import CargoService
+from repositories.usuariosRepository import userRepo
+from services.cargoService import cargoService
+
 class usuarioService:
 
     def __init__(self, usuario_repository, cargo_service):
@@ -10,34 +14,31 @@ class usuarioService:
     def validarUsuario(self, nomeUsuario):
         if not self.usuario_repo.buscarUsuario(nomeUsuario):
             # Se buscar usuário e não encontrar, usuário foi validado e não existe
-            print('User não existe')
             return True
         else:
             # Se encontrar algo, usuário foi validado e existe
-            print('user existe')
             return False
 
     def cadastrarUsuario(self, nomeUsuario: str, cargo: str):
-        print('Entrou no cadastro')
         validacao = self.validarUsuario(nomeUsuario)
-        print(f'puxou validação {validacao}')
 
         if not validacao:
-            print('entrou no if')
-            return "Usuário já cadastrado!"
+            return " já cadastrado!"
         else:
-            print('entrou no else')
             idCargo = self.cargo_service.buscarIdCargo(cargo) 
             self.usuario_repo.inserir_usuario(nomeUsuario, idCargo)
-            return "Usuário cadastrado com sucesso!"
+            return " cadastrado com sucesso!"
         
     def listarUsuarios(self):
+        limpar_tela()
         usuarios = self.usuario_repo.listarUsuarios()
-        resultado = "+==========Lista de Usuários==========+\n"
+        resultado = (f"{CORES['AZUL']}{CORES['NEGRITO']}========== LISTA DE USUÁRIOS ==========\n\n{CORES['RESET']}")
+        numero = 0
     
         for usuario in usuarios:
+            numero += 1
             nome = usuario[0]
-            resultado += f"Usuário: {nome}\n"
+            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{numero}.{CORES['RESET']} {nome}\n"
             
         return resultado
     
@@ -72,4 +73,4 @@ class usuarioService:
             self.usuario_repo.removerUsuario(nomeUsuario)
             return "Usuário removido com sucesso!"
         
-
+userService = usuarioService(userRepo, cargoService)

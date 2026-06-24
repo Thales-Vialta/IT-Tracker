@@ -3,6 +3,12 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from views.gerenciarUsuariosView import gerenciarUsuariosView  
+from views.gerenciarSalaView import gerenciarSalaView 
+from views.gerenciarHoraView import gerenciarHoraView
+from views.backupView import backupView  
+from views.formatarDadosView import formatarDadosView
+
 class configView:
     def config(self):
         while True:
@@ -25,19 +31,14 @@ class configView:
             ).ask()
 
             if opcao == "Gerenciar Usuários":
-                from views.gerenciarUsuariosView import gerenciarUsuariosView  
                 gerenciarUsuariosView().gerenciar_usuarios()
-            elif opcao == "Gerenciar Salas":
-                from views.gerenciarSalaView import gerenciarSalaView  
+            elif opcao == "Gerenciar Salas":                 
                 gerenciarSalaView().gerenciar_sala()
             elif opcao == "Gerenciar Horário de Funcionamento": 
-                from views.gerenciarHoraView import gerenciarHoraView  
                 gerenciarHoraView().gerenciar_horario()
             elif opcao == "Backup de Dados":
-                from views.backupView import backupView  
                 backupView().backup()
             elif opcao == "Formatar Dados":
-                from views.formatarDadosView import formatarDadosView  
                 formatarDadosView().formatar_dados()
             elif opcao == "Voltar":
                 break

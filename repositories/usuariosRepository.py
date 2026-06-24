@@ -85,3 +85,5 @@ class UsuarioRepository:
            finally:
                cursor.close()
                conn.close()
+
+userRepo = UsuarioRepository()
