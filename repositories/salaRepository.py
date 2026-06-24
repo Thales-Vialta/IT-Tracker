@@ -1,6 +1,7 @@
 from dbConnector.Database import DatabaseConnector
 
-class salaRepository: 
+class salaRepository:
+
     def Inserir_Horario(self, sala): 
         conn = DatabaseConnector().get_connection()
         try:
@@ -13,7 +14,6 @@ class salaRepository:
                     (
                         sala.NomeSala,sala.EnderecoSala
                     ))
-        
             conn.commit()
         finally:
             cursor.close()

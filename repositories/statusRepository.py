@@ -1,6 +1,7 @@
 from dbConnector.Database import DatabaseConnector
 
-class HorarioRepository: 
+class HorarioRepository:
+
     def Inserir_Horario(self, StatusAparelho): 
         conn = DatabaseConnector().get_connection()
         try:
@@ -13,11 +14,11 @@ class HorarioRepository:
                     (
                         StatusAparelho.Descricao
                     ))
-        
             conn.commit()
         finally:
             cursor.close()
             conn.close()
+
     def Listar_Horario(self):
         conn = DatabaseConnector().get_connection()
         try:
@@ -25,7 +26,6 @@ class HorarioRepository:
             cursor.execute("""
                         SELECT * FROM StatusAparelho
                     """)
-        
             conn.commit()
         finally:
             cursor.close()
@@ -43,6 +43,7 @@ class HorarioRepository:
             finally: 
                 cursor.close()
                 conn.close()
+
     def Listar_Defeituosos(self):
             conn = DatabaseConnector().get_connection()
             try:
@@ -53,7 +54,6 @@ class HorarioRepository:
                     INNER JOIN Status ON Aparelho.IDStatus = Status.ID
                     WHERE Aparelho.IDStatus = 3
                         """)
-            
                 conn.commit()
             finally:
                 cursor.close()

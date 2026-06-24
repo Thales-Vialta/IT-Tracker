@@ -5,7 +5,6 @@ class AparelhoRepository:
 
     def inserir_aparelho(self, Aparelhos):
         conn = DatabaseConnector().get_connection()
-
         try:
             cursor = conn.cursor()
 
@@ -19,10 +18,10 @@ class AparelhoRepository:
             ))
 
             conn.commit()
-
         finally:
             cursor.close()
             conn.close()
+
     def Aparelho_mais_utilizado(self): 
         conn = DatabaseConnector().get_connection()
         try: 
@@ -40,6 +39,7 @@ class AparelhoRepository:
         finally: 
             cursor.close()
             conn.close()
+
     def Editar_Aparelho(self): 
         conn = DatabaseConnector().get_connection()
         try: 
@@ -64,6 +64,7 @@ class AparelhoRepository:
             finally: 
                 cursor.close()
                 conn.close()
+
 repo = AparelhoRepository()
 for serial in repo.Aparelho_mais_utilizado():
     print(f"{serial}")

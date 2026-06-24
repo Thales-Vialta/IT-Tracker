@@ -17,7 +17,6 @@ class AlocacaoRepository:
                 alocacao.DataAlocacao,
                 alocacao.DataDevolucao
             ))
-
             conn.commit()
         finally:
             cursor.close()
@@ -39,12 +38,11 @@ class AlocacaoRepository:
         finally: 
             cursor.close()
             conn.close()
-    
+
     def Editar_Alocacao(self, alocacao): 
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
-            
             cursor.execute("""
                 UPDATE Alocacao 
                 SET idUsuario = %s, id_Aparelho = %s, idSala = %s, DataAlocacao = %s, DataDevolucao = %s 
@@ -58,7 +56,6 @@ class AlocacaoRepository:
                 alocacao.DataDevolucao,
                 alocacao.idAlocacao
             ))
-            
             conn.commit() 
         finally: 
             cursor.close()
@@ -68,12 +65,10 @@ class AlocacaoRepository:
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
-            
             cursor.execute("""
                 DELETE FROM Alocacao
                 WHERE idAlocacao = %s
             """, (alocacao.idAlocacao,))
-            
             conn.commit() 
         finally: 
             cursor.close()
