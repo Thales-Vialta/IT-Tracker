@@ -45,8 +45,16 @@ class usuarioService:
         if validacao:
             return "Usuário não encontrado!"
         else:
-            self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
-            return "Usuário atualizado!"    
+            if atributo == 'Cargo':
+                atributo = 'ID_Cargo'
+                valor = self.cargo_service.buscarIdCargo(valor)
+
+                self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
+                return "Usuário atualizado!"    
+            
+            else:
+                self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
+                return "Usuário atualizado!"                  
 
     def removerUsuario(self,nomeUsuario):
         validacao = self.validarUsuario(nomeUsuario)

@@ -19,7 +19,7 @@ repo_Usuario = UsuarioRepository()
 serv_Usuario = usuarioService(repo_Usuario,servCargo)
 
 # TESTE CARGOS
-print('TESTE CARGOS')
+"""print('TESTE CARGOS')
 cargoAleatorio = 'Professor'
 
 cargos = servCargo.capturarCargos()
@@ -31,10 +31,10 @@ print()
 print()
 print()
 print()
-print()
+print()"""
 
 # TESTE USUÁRIOS
-print('TESTE USUARIOS')
+"""print('TESTE USUARIOS')
 serv_Usuario = usuarioService(repo_Usuario,servCargo)
 
 userCap = serv_Usuario.listarUsuarios() 
@@ -51,23 +51,23 @@ print()
 Validar = serv_Usuario.validarUsuario('João de Oliveira Stekel')
 print(Validar)
 print()
-print()
+print()"""
 
-atualizar = serv_Usuario.atualizaUsuario('Joana de Oliveira Stekel','ID_Cargo','3')
+atualizar = serv_Usuario.atualizaUsuario('Joana de Oliveira Stekel','Cargo','Professor')
 print(atualizar)
 print()
 print()
 
-eliminar_joao = serv_Usuario.removerUsuario('João')
+"""eliminar_joao = serv_Usuario.removerUsuario('João')
 print(eliminar_joao)
 print()
 print()
 print()
 print()
-print()
+print()"""
 
 # TESTE SALAS
-print('TESTE SALAS')
+"""print('TESTE SALAS')
 
 print(servSala.listarSalas(),'\n')
 
@@ -90,7 +90,7 @@ print()
 print('TESTE HORARIOS')
 
 hora = servHora.listarHorarios()
-print(hora)
+print(hora)"""
 
 
 
