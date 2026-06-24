@@ -18,6 +18,7 @@ class salaRepository:
         finally:
             cursor.close()
             conn.close()
+
     def Total_Por_Sala(self):
         conn = DatabaseConnector().get_connection()
         try:
@@ -31,9 +32,6 @@ class salaRepository:
         finally:
             cursor.close()
             conn.close()
-
-
-
 
     def listarSalas(self):
         conn = DatabaseConnector().get_connection()
