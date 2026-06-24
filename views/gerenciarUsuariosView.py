@@ -25,8 +25,8 @@ class gerenciarUsuariosView:
             ).ask()
 
             if opcao == "Ver Usuários Cadastrados":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+                from services.userService import usuarioService 
+                usuarioService().listarUsuarios()
             elif opcao == "Criar Novo Usuário":
                 print(" Gerenciar reservas em desenvolvimento")
                 input("enter")
