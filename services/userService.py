@@ -27,7 +27,7 @@ class usuarioService:
             return "Usuário já cadastrado!"
         else:
             print('entrou no else')
-            idCargo = self.cargo_service.capturarIdCargo(cargo) 
+            idCargo = self.cargo_service.buscarIdCargo(cargo) 
             self.usuario_repo.inserir_usuario(nomeUsuario, idCargo)
             return "Usuário cadastrado com sucesso!"
         

@@ -7,4 +7,12 @@ class horarioService:
         self.horario_repo = horario_repository
 
     def listarHorarios(self):
-        return self.horario_repo.Listar_Horario()
+        hora = self.horario_repo.Listar_Horario()
+        resultado = "+==========Lista de Horários==========+\n"
+
+        # Agora sim, fazemos o laço FOR de verdade para rodar cada registro do banco
+        for HoraInicio, HoraFim, Descricao in hora:
+        # Usamos uma f-string para encaixar as variáveis no texto
+            resultado += f"{Descricao} | {HoraInicio} - {HoraFim}\n"
+
+        return resultado

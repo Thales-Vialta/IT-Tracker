@@ -8,9 +8,66 @@ from repositories.salaRepository import salaRepository
 from services.salaService import salaService
 
 
-
+# INSTANCIAÇÃO DE CLASSES
+repo_Cargo = CargoRepository()
+servCargo = CargoService(repo_Cargo)
+repo_Horario = HorarioRepository()
+servHora = horarioService(repo_Horario)
 repo_Sala = salaRepository()
 servSala = salaService(repo_Sala)
+repo_Usuario = UsuarioRepository()
+serv_Usuario = usuarioService(repo_Usuario,servCargo)
+
+# TESTE CARGOS
+print('TESTE CARGOS')
+cargoAleatorio = 'Professor'
+
+cargos = servCargo.capturarCargos()
+print(cargos)
+
+idCargo = servCargo.buscarIdCargo(cargoAleatorio)
+print(idCargo)
+print()
+print()
+print()
+print()
+print()
+
+# TESTE USUÁRIOS
+print('TESTE USUARIOS')
+serv_Usuario = usuarioService(repo_Usuario,servCargo)
+
+userCap = serv_Usuario.listarUsuarios() 
+print(userCap)
+
+print(serv_Usuario.cadastrarUsuario('João', 'Professor')) 
+print()
+print()
+search_user = serv_Usuario.buscaUsuario('Joana de Oliveira Stekel') #retornou lista vazia
+print(search_user)
+print()
+print()
+
+Validar = serv_Usuario.validarUsuario('João de Oliveira Stekel')
+print(Validar)
+print()
+print()
+
+atualizar = serv_Usuario.atualizaUsuario('Joana de Oliveira Stekel','ID_Cargo','3')
+print(atualizar)
+print()
+print()
+
+eliminar_joao = serv_Usuario.removerUsuario('João')
+print(eliminar_joao)
+print()
+print()
+print()
+print()
+print()
+
+# TESTE SALAS
+print('TESTE SALAS')
 
 print(servSala.listarSalas(),'\n')
 
@@ -23,47 +80,23 @@ print(servSala.cadastrarSalas(100,'Sala dos mano', 'A113 | Bloco B | 2°Andar'),
 print(servSala.editarSalas('Sala das Mana','EnderecoSala','A67'),'\n')
 
 print(servSala.removerSalas('Sala das Mana'),'\n')
-repo_Cargo = CargoRepository()
-servCargo = CargoService(repo_Cargo)
-repo_Horario = HorarioRepository()
-servHora = horarioService(repo_Horario)
+
+print()
+print()
+print()
+
+
+# TESTE HORÁRIOS
+print('TESTE HORARIOS')
+
+hora = servHora.listarHorarios()
+print(hora)
 
 
 
-repo_Usuario = UsuarioRepository()
-serv_Usuario = usuarioService(repo_Usuario,servCargo)
-
-servHora.listarHorarios()
-
-cargoAleatorio = 'Professor'
-
-userCap = serv_Usuario.capturaUsuarios()
-print(userCap)
-
-search_user = serv_Usuario.buscaUsuario('João de Oliveira Stekel')
-print(search_user)
-
-Validar = serv_Usuario.validarUsuario('João de Oliveira Stekel')
-print(Validar)
-
-atualizar = serv_Usuario.atualizaUsuario('Joana de Oliveira Stekel','ID_Cargo','2')
-print(atualizar)
-
-eliminar_joao = serv_Usuario.removerUsuario('João')
-print(eliminar_joao)
 
 
 
-cargos = servCargo.capturarCargos()
-print(cargos)
-
-idCargo = servCargo.capturarIdCargo(cargoAleatorio)
-print(idCargo)
 
 
-for id_usuario, nome in repo_Usuario.Usuario_Nunca_Alocou():
-    print(f"{id_usuario} - {nome}")
 
-serv_Usuario = usuarioService(repo_Usuario,servCargo)
-print('Teste começa aqui')
-print(serv_Usuario.cadastrarUsuario('João', 'Professor'))
