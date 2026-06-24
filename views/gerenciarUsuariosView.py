@@ -7,6 +7,7 @@ from services.userService import usuarioService
 from repositories.usuariosRepository import userRepo
 from services.cargoService import cargoService
 from views.criarNovoUsuarioView import CriarNovoUsuarioView
+from views.editarUsuarioView import editarUsuarioView
 
 class gerenciarUsuariosView:
 
@@ -35,8 +36,7 @@ class gerenciarUsuariosView:
             elif opcao == "Criar Novo Usuário":
                CriarNovoUsuarioView().criar_usuario()
             elif opcao == "Editar Usuários": 
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
+                editarUsuarioView().editar_usuario()
             elif opcao == "Deletar Usuários":
                 print("Manutenção em desenvolvimento")
                 input("enter")
