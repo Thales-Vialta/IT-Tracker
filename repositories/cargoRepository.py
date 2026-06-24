@@ -6,28 +6,29 @@ class CargoRepository:
     def listarCargos(self):
         conn = DatabaseConnector().get_connection()
         try: 
-            cursor = conn.cursor()
-            cursor.execute('''Select * from Cargo Order by Cargos''')
-            resultado = cursor.fetchall()
-            return resultado
-        except ValueError: 
-                print("Erro! Nome vazio")
+            with conn.cursor() as cursor:
+                cursor.execute('''Select * from Cargo Order by Cargos''')
+                resultado = cursor.fetchall()
+                return resultado
+        except Exception as e: 
+                print("Erro! ",e)
         finally:
-                cursor.close()
                 conn.close()
 
     def buscarIdCargo(self, cargo: str):
             conn = DatabaseConnector().get_connection()
             try: 
-                cursor = conn.cursor()
-                cursor.execute('''SELECT idCargo FROM Cargo WHERE Cargos = %s''', (cargo,))
-                resultado = cursor.fetchone()
-                return resultado[0] if resultado else None
+                with conn.cursor() as cursor:
+                    cursor.execute('''SELECT ID_Cargo FROM Cargo WHERE Cargos = %s''', (cargo,))
+                    resultado = cursor.fetchall()
+                    return resultado if resultado else None
                 
             except ValueError: 
                 print("Erro! Nome vazio")
+            except Exception as e: 
+                print("Erro! ",e)
             finally:
-                cursor.close()
+                
                 conn.close()
                 
 repo = CargoRepository()

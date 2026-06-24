@@ -8,8 +8,8 @@ class CargoService:
     def capturarCargos(self):
         return self.cargo_repo.listarCargos()
     
-    def capturarIdCargo(self):
-        return self.cargo_repo.buscarIdCargo()
+    def capturarIdCargo(self,cargo:str):
+        return self.cargo_repo.buscarIdCargo(cargo)
 
 
         

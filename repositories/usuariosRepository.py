@@ -1,9 +1,8 @@
 from dbConnector.Database import DatabaseConnector
-from models.usuarios import *
-
+from services.userService import usuarioService
 class UsuarioRepository:
 
-    def inserir_usuario(self, usuario):
+    def inserir_usuario(self, nome_usuario, id_cargo):
         conn = DatabaseConnector().get_connection()
 
         try:
@@ -15,8 +14,8 @@ class UsuarioRepository:
                 VALUES (%s, %s)
             """,
             (
-                usuario.nome_usuario,
-                usuario.id_cargo
+                nome_usuario,
+                id_cargo
             ))
 
             conn.commit()
@@ -25,60 +24,91 @@ class UsuarioRepository:
             cursor.close()
             conn.close()
 
-    def Usuario_Nunca_Alocou(self): 
+def buscarIdCargo(self, cargo: str):
         conn = DatabaseConnector().get_connection()
-        try: 
-            cursor = conn.cursor()
-
-            cursor.execute("""SELECT idUsuario, Nome_Usuario AS Usuario_Nunca_Alocou
-            FROM Usuario
-            WHERE idUsuario NOT IN (
-            SELECT idUsuario
-            FROM Alocacao)""")
-            resultado = cursor.fetchall()
-            return resultado
-            
-        finally: 
-            cursor.close()
-            conn.close()
-
-    def listarUsuarios(self):
-        conn = DatabaseConnector().get_connection()
-        try: 
-            cursor = conn.cursor()
-            cursor.execute('''Select Nome_Usuario from Usuario Order by Nome_Usuario''')
-            resultado = cursor.fetchall()
-            return resultado
-        except ValueError: 
+        with conn.cursor() as cursor:
+            try: 
+                cursor.execute('''SELECT idCargo FROM Cargo WHERE Cargos = %s''', (cargo,))
+                resultado = cursor.fetchall()
+                return resultado if resultado else None
+            except ValueError: 
                 print("Erro! Nome vazio")
-        finally:
-                cursor.close()
+            finally:
                 conn.close()
 
-    def buscarUsuario(self,usuario):
-        conn = DatabaseConnector().get_connection()
-        try: 
-            cursor = conn.cursor()
-            cursor.execute('''Select * from Usuario where Nome_Usuario like %s''',(usuario.nome_usuario))
-            resultado = cursor.fetchall()
-            return resultado
-        except ValueError: 
-                print("Erro! Nome vazio")
-        finally:
-            cursor.close()
-            conn.close()
+def listarUsuarios(self):
+    conn = DatabaseConnector().get_connection()
 
-    def editarUsuario(self, atributo:str, valor:str):
-         pass
-    
-    def removerUsuario(self,nomeUsuario):
+    try:
+        cursor = conn.cursor()
 
-         pass
-         
-        
-    
-repo = UsuarioRepository()
+        cursor.execute("""
+            SELECT Nome_Usuario
+            FROM Usuario
+            ORDER BY Nome_Usuario
+        """)
 
-for id_usuario, nome in repo.Usuario_Nunca_Alocou():
-    print(f"{id_usuario} - {nome}")
+        return cursor.fetchall()
 
+    finally:
+        cursor.close()
+        conn.close()
+
+def buscarUsuario(self, nome_usuario):
+    conn = DatabaseConnector().get_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM Usuario
+            WHERE Nome_Usuario = %s
+            """,
+            (nome_usuario,)
+        )
+
+        return cursor.fetchone()
+
+    finally:
+        cursor.close()
+        conn.close()
+
+def editarUsuario(self, nome_usuario, atributo, valor):
+    conn = DatabaseConnector().get_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+                        UPDATE Usuario
+                        SET {atributo} = %s
+                        WHERE Nome_Usuario = %s
+                    """, (valor, nome_usuario))
+        resultado = cursor.fetchone()
+        conn.commit()
+        return resultado
+    finally:
+        cursor.close()
+        conn.close()
+
+def removerUsuario(self, nome_usuario):
+    conn = DatabaseConnector().get_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            DELETE FROM Usuario
+            WHERE Nome_Usuario = %s
+            """,
+            (nome_usuario,)
+        )
+
+        conn.commit()
+
+    finally:
+        cursor.close()
+        conn.close()

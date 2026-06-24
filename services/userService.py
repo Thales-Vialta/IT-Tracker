@@ -1,7 +1,6 @@
 from models.usuarios import Usuario
 from repositories.usuariosRepository import UsuarioRepository
 from services.cargoService import CargoService
-
 class usuarioService:
 
     def __init__(self, usuario_repository, cargo_service):
