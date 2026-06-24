@@ -5,8 +5,8 @@ class CargoService:
     def __init__(self, cargo_repository):
         self.cargo_repo = cargo_repository
 
-    def capturarCargos(self):
+    def listarCargos(self):
         return self.cargo_repo.listarCargos()
     
-    def capturarIdCargo(self,cargo:str):
+    def buscarIdCargo(self,cargo:str):
         return self.cargo_repo.buscarIdCargo(cargo)

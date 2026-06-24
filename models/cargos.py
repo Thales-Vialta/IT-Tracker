@@ -6,3 +6,4 @@ class Cargo:
 
         def __str__(self):
                 return f"ID_Cargo: {self.__idCargo} | Cargo: {self.__Descricao_cargo}"
+        
