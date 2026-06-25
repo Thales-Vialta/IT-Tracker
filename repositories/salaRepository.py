@@ -3,17 +3,17 @@ from dbConnector.Database import DatabaseConnector
 
 class salaRepository:
 
-    def Inserir_Horario(self, sala): 
+    def Inserir_Sala(self, sala): 
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()     
             cursor.execute("""
                         INSERT INTO Sala
-                        (idSala,NomeSala,EnderecoSala)
-                        VALUES (%s,%s,%s)
+                        (NomeSala,EnderecoSala)
+                        VALUES (%s,%s)
                     """,
                     (
-                        sala.idSala,sala.NomeSala,sala.EnderecoSala
+                        sala.NomeSala,sala.EnderecoSala
                     ))
             print('sala cadastrada com sucesso')
             conn.commit()

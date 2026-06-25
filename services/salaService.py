@@ -21,13 +21,13 @@ class salaService:
             #sala existe e não pode cadastrar uma nova
             return False
 
-    def cadastrarSalas(self,idSala:int, NomeSala: str, EnderecoSala: str):
+    def cadastrarSalas(self, NomeSala: str, EnderecoSala: str):
         validacao = self.existeSala(NomeSala)
         if not validacao:
             return "Sala já cadastrada!"
         else:
-            nova_sala = Sala(idSala,NomeSala, EnderecoSala,)
-            self.sala_repo.Inserir_Horario(nova_sala)
+            nova_sala = Sala(NomeSala, EnderecoSala)
+            self.sala_repo.Inserir_Sala(nova_sala)
             return "tentando cadastrar sala"
 
     def removerSalas(self, NomeSala: str):

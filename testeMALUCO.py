@@ -6,7 +6,7 @@ from services.horarioService import horarioService
 from repositories.horarioRepository import HorarioRepository
 from repositories.salaRepository import salaRepository
 from services.salaService import salaService
-
+from repositories.alocacaoRepository import AlocacaoRepository
 
 # INSTANCIAÇÃO DE CLASSES
 repo_Cargo = CargoRepository()
@@ -17,7 +17,7 @@ repo_Sala = salaRepository()
 servSala = salaService(repo_Sala)
 repo_Usuario = UsuarioRepository()
 serv_Usuario = usuarioService(repo_Usuario,servCargo)
-
+repo_Aloc = AlocacaoRepository()
 # TESTE CARGOS
 print('TESTE CARGOS')
 cargoAleatorio = 'Professor'
@@ -43,7 +43,7 @@ print(userCap)
 print(serv_Usuario.cadastrarUsuario('João', 'Professor')) 
 print()
 print()
-search_user = serv_Usuario.buscaUsuario('Joana de Oliveira Stekel') #retornou lista vazia
+search_user = serv_Usuario.buscaUsuario('Helena Pera') 
 print(search_user)
 print()
 print()
@@ -75,7 +75,7 @@ print(servSala.buscarSalas('Auditório Principal'),'\n')
 
 print(servSala.existeSala('Sala dos mano'),'\n')
 
-print(servSala.cadastrarSalas(100,'Sala dos mano', 'A113 | Bloco B | 2°Andar'),'\n')
+print(servSala.cadastrarSalas('Sala dos pessoalzinho do ti', 'A113 | Bloco B | 2°Andar'),'\n')
 
 print(servSala.editarSalas('Sala das Mana','EnderecoSala','A67'),'\n')
 
@@ -92,11 +92,15 @@ print('TESTE HORARIOS')
 hora = servHora.listarHorarios()
 print(hora)
 
+#TESTE ALOCAÇÃO
 
+print(repo_Aloc.inserir_Alocacao(1,3,10,'2026-07-01','2026-07-02'))
 
+print(repo_Aloc.Aparelhos_menos_Alocados())
 
+print(repo_Aloc.Editar_Alocacao(15,21,100,'2026-07-04','2026-07-06',16))
 
-
+print(repo_Aloc.Deletar_Alocacao(17))
 
 
 

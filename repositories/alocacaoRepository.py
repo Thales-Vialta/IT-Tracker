@@ -1,7 +1,7 @@
 from dbConnector.Database import DatabaseConnector
 class AlocacaoRepository:
 
-    def inserir_Alocacao(self, alocacao):
+    def inserir_Alocacao(self,idUsuario: int,id_Aparelho:int,idSala:int,DataAlocacao:str,DataDevolucao:str ):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
@@ -11,11 +11,11 @@ class AlocacaoRepository:
                 VALUES (%s, %s, %s, %s, %s)
             """,
             (
-                alocacao.idUsuario,
-                alocacao.id_Aparelho,
-                alocacao.idSala,
-                alocacao.DataAlocacao,
-                alocacao.DataDevolucao
+                idUsuario,
+                id_Aparelho,
+                idSala,
+                DataAlocacao,
+                DataDevolucao
             ))
             conn.commit()
         finally:
@@ -39,7 +39,7 @@ class AlocacaoRepository:
             cursor.close()
             conn.close()
 
-    def Editar_Alocacao(self, alocacao): 
+    def Editar_Alocacao(self, idUsuario: int,id_Aparelho:int,idSala:int,DataAlocacao:str,DataDevolucao:str,idAlocacao:int ): 
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
@@ -49,26 +49,26 @@ class AlocacaoRepository:
                 WHERE idAlocacao = %s
             """, 
             (
-                alocacao.idUsuario,
-                alocacao.id_Aparelho,
-                alocacao.idSala,
-                alocacao.DataAlocacao,
-                alocacao.DataDevolucao,
-                alocacao.idAlocacao
+                idUsuario,
+                id_Aparelho,
+                idSala,
+                DataAlocacao,
+                DataDevolucao,
+                idAlocacao
             ))
             conn.commit() 
         finally: 
             cursor.close()
             conn.close()
 
-    def Deletar_Alocacao(self, alocacao): 
+    def Deletar_Alocacao(self, idAlocacao:int): 
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
             cursor.execute("""
                 DELETE FROM Alocacao
                 WHERE idAlocacao = %s
-            """, (alocacao.idAlocacao,))
+            """, (idAlocacao,))
             conn.commit() 
         finally: 
             cursor.close()

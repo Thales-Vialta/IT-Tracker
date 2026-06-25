@@ -1,6 +1,6 @@
 class Sala:
-    def __init__(self, idSala, NomeSala: str, EnderecoSala: str):
-        self.idSala = idSala
+    def __init__(self, NomeSala: str, EnderecoSala: str):
+        self.idSala = None
         self.NomeSala = NomeSala
         self.EnderecoSala = EnderecoSala
 
