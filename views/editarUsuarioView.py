@@ -20,7 +20,12 @@ class editarUsuarioView:
 
         if not nome_usuario:
             print(f"{CORES['VERMELHO']}Nome inválido!{CORES['RESET']}")
-            input("\nVoltar...")
+            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            return
+        
+        if usuarioService(userRepo, cargoService).validarUsuario(nome_usuario):
+            print(f"\n{CORES['VERMELHO']}Usuário não encontrado!{CORES['RESET']}")
+            input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
         
         atributo = questionary.select(
@@ -45,7 +50,7 @@ class editarUsuarioView:
                 qmark=" ",
                 style=minhas_cores,
                 choices=opcoes_cargos
-            ).ask
+            ).ask()
 
             if novo_valor == "Cancelar":
                 return
@@ -62,13 +67,16 @@ class editarUsuarioView:
                 input("\nVoltar...")
                 return
         
-        validacao = usuarioService(userRepo, cargoService).atualizaUsuario(nome_usuario, atributo, novo_valor)
+        atributo_banco = "Nome_Usuario" if atributo == "Nome" else atributo
+        
+        validacao = usuarioService(userRepo, cargoService).atualizaUsuario(nome_usuario, atributo_banco, novo_valor)
+        limpar_tela()
         if "atualizado" in validacao.lower():
-            print(f"\n{CORES['VERDE']}{validacao}{CORES['RESET']}")
+            print(f"\n{CORES['VERDE']}{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{validacao}{CORES['RESET']}")
         else:
             print(f"\n{CORES['VERMELHO']}{validacao}{CORES['RESET']}")
         
-        input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+        input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
 
 
         

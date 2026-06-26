@@ -58,19 +58,19 @@ class usuarioService:
                 valor = self.cargo_service.buscarIdCargo(valor)
 
                 self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
-                return "Usuário atualizado!"    
+                return " atualizado!"    
             
             else:
                 self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
-                return "Usuário atualizado!"                  
+                return " atualizado!"                  
 
     def removerUsuario(self,nomeUsuario):
         validacao = self.validarUsuario(nomeUsuario)
 
         if validacao:
-            return "Usuário não encontrado!"
+            return " não encontrado!"
         else:
             self.usuario_repo.removerUsuario(nomeUsuario)
-            return "Usuário removido com sucesso!"
+            return "removido com sucesso!"
         
 userService = usuarioService(userRepo, cargoService)

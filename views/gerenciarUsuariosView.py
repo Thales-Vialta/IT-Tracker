@@ -8,6 +8,7 @@ from repositories.usuariosRepository import userRepo
 from services.cargoService import cargoService
 from views.criarNovoUsuarioView import CriarNovoUsuarioView
 from views.editarUsuarioView import editarUsuarioView
+from views.removerUsuarioView import removerUsuarioView
 
 class gerenciarUsuariosView:
 
@@ -32,13 +33,12 @@ class gerenciarUsuariosView:
 
             if opcao == "Ver Usuários Cadastrados":
                 print(usuarioService(userRepo, cargoService).listarUsuarios())
-                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+                input(f"{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Usuário":
                CriarNovoUsuarioView().criar_usuario()
             elif opcao == "Editar Usuários": 
                 editarUsuarioView().editar_usuario()
             elif opcao == "Deletar Usuários":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+                removerUsuarioView().remover_usuario()
             elif opcao == "Voltar":
                 break

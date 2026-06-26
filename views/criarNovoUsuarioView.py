@@ -19,15 +19,21 @@ class CriarNovoUsuarioView:
         ).ask()
 
         if not nome_usuario or nome_usuario == "":
-            print(f"{CORES['VERMELHO']}Nome não pode ser vazio!{CORES['RESET']}")
-            input("\nVoltar...")
+            print(f"{CORES['VERMELHO']}Nome inválido!{CORES['RESET']}")
+            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            return
+        
+        if not usuarioService(userRepo, cargoService).validarUsuario(nome_usuario):
+            limpar_tela()
+            print(f"\n{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{CORES['VERMELHO']} já está cadastrado no sistema!{CORES['RESET']}")
+            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
         cargos_banco = cargoService.capturarCargos()
         
         if not cargos_banco:
             print(f"{CORES['VERMELHO']}Nenhum cargo cadastrado no sistema!{CORES['RESET']}")
-            input("\nVoltar...")
+            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
         opcoes_cargos = [cargo[1] for cargo in cargos_banco]
@@ -48,9 +54,9 @@ class CriarNovoUsuarioView:
          
         if "sucesso" in validacao.lower():
             limpar_tela()
-            print(f"\n{CORES['VERDE']}{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{validacao}{CORES['RESET']}")
+            print(f"\n{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{CORES['VERDE']}{validacao}{CORES['RESET']}")
         else:
             limpar_tela()
-            print(f"\n{CORES['VERMELHO']}{validacao}{CORES['RESET']}")
+            print(f"\n{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{CORES['VERMELHO']}{validacao}{CORES['RESET']}")
 
-        input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+        input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
