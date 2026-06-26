@@ -20,7 +20,7 @@ class removerUsuarioView:
 
         if not nome_usuario or nome_usuario.strip() == "":
             print(f"{CORES['VERMELHO']}Nome inválido!{CORES['RESET']}")
-            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
         if usuarioService(userRepo, cargoService).validarUsuario(nome_usuario):
@@ -35,4 +35,4 @@ class removerUsuarioView:
         limpar_tela()
         print(f"\n{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{CORES['VERDE']}{validacao}{CORES['RESET']}")
         
-        input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+        input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")

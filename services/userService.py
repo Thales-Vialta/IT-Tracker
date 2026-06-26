@@ -38,7 +38,8 @@ class usuarioService:
         for usuario in usuarios:
             numero += 1
             nome = usuario[0]
-            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{numero}.{CORES['RESET']} {nome}\n"
+            cargo = usuario[1]
+            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{numero}. {nome} | {CORES['RESET']} {CORES['RESET']} {cargo}\n"
             
         return resultado
     
@@ -70,7 +71,9 @@ class usuarioService:
         if validacao:
             return " não encontrado!"
         else:
-            self.usuario_repo.removerUsuario(nomeUsuario)
+            status = self.usuario_repo.removerUsuario(nomeUsuario)
+            if status == "vinculado":
+                return "não pode ser removido, pois possui reservas vinculadas ao seu nome!"
             return "removido com sucesso!"
         
 userService = usuarioService(userRepo, cargoService)

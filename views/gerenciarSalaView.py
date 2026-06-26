@@ -3,6 +3,11 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from services.salaService import salaService
+from views.criarNovaSalaView import criarNovaSalaView
+from views.editarSalaView import editarSalaView
+from views.removerSalaView import removerSalaView
+
 class gerenciarSalaView:
 
     def gerenciar_sala(self):
@@ -25,16 +30,13 @@ class gerenciarSalaView:
             ).ask()
 
             if opcao == "Ver Salas Cadastradas":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+                print(salaService.listarSalas())
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Nova Sala":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
+                criarNovaSalaView().criar_sala()
             elif opcao == "Editar Salas": 
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
+                editarSalaView().editar_sala()
             elif opcao == "Deletar Salas":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+                removerSalaView().remover_sala()
             elif opcao == "Voltar":
                 break

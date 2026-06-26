@@ -41,7 +41,7 @@ class salaRepository:
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
-            cursor.execute('''SELECT NomeSala FROM Sala ORDER BY NomeSala''')
+            cursor.execute('''SELECT NomeSala, EnderecoSala FROM Sala ORDER BY NomeSala''')
             resultado = cursor.fetchall()
             return resultado
         finally:
@@ -65,6 +65,12 @@ class salaRepository:
             cursor = conn.cursor()
             cursor.execute('''DELETE FROM Sala WHERE NomeSala = %s''', (nome_sala,))
             conn.commit()
+            return True
+        except Exception as e:
+            if "a foreign key constraint fails" in str(e).lower() or "1451" in str(e):
+                return "vinculada"
+            print(f"Não foi possível remover {e}. Confirme se a sala não está reservada")
+            return False
         finally:
             cursor.close()
             conn.close()
@@ -79,3 +85,5 @@ class salaRepository:
         finally:
             cursor.close()
             conn.close()
+
+salaRepo = salaRepository()

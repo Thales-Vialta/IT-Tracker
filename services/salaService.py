@@ -1,5 +1,8 @@
 from models.salas import Sala
-from repositories.salaRepository import salaRepository
+from repositories.salaRepository import salaRepo
+
+from  views.limparTela import limpar_tela
+from views.cores import CORES
 
 class salaService:
 
@@ -7,7 +10,18 @@ class salaService:
         self.sala_repo = sala_repository
 
     def listarSalas(self):
-        return self.sala_repo.listarSalas()
+        limpar_tela()
+        salas = self.sala_repo.listarSalas()
+        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- LISTA DE SALAS ----\n\n{CORES['RESET']}"
+        numero = 0
+
+        for sala in salas:
+            numero += 1
+            nome_sala = sala[0]
+            endereco = sala[1]
+            resultado += f"{CORES['NEGRITO']}{CORES['AMARELO']}{nome_sala} |{CORES['RESET']} {CORES['RESET']} {endereco}\n"
+        
+        return resultado
 
     def buscarSalas(self, nome: str):
         return self.sala_repo.buscarSala(nome)
@@ -35,7 +49,9 @@ class salaService:
         if validacao:
             return "Sala não encontrada!"
         else:
-            self.sala_repo.removerSala(NomeSala)
+            status = self.sala_repo.removerSala(NomeSala)
+            if status == "vinculada":
+                return("não pode ser removida, pois existem reservas para ela!")
             return "Sala removida com sucesso!"
 
     def editarSalas(self, NomeSala: str, atributo: str, valor: str):
@@ -45,3 +61,5 @@ class salaService:
         else:
             self.sala_repo.editarSala(NomeSala, atributo, valor)
             return "Sala updated!"
+
+salaService = salaService(salaRepo)

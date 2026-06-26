@@ -43,7 +43,12 @@ class UsuarioRepository:
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
-            cursor.execute('''Select Nome_Usuario from Usuario Order by Nome_Usuario''')
+            cursor.execute('''
+                SELECT u.Nome_Usuario, c.Cargos 
+                FROM Usuario u
+                INNER JOIN Cargo c ON u.ID_Cargo = c.ID_Cargo
+                ORDER BY u.Nome_Usuario
+            ''')
             resultado = cursor.fetchall()
             return resultado
         except ValueError: 
@@ -66,14 +71,20 @@ class UsuarioRepository:
             conn.close()
 
     def removerUsuario(self, nome_usuario: str):
-           conn = DatabaseConnector().get_connection()
-           try:
-               cursor = conn.cursor()
-               cursor.execute('''DELETE FROM Usuario WHERE Nome_Usuario = %s''', (nome_usuario,))
-               conn.commit()
-           finally:
-               cursor.close()
-               conn.close()
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''DELETE FROM Usuario WHERE Nome_Usuario = %s''', (nome_usuario,))
+            conn.commit()
+            return True
+        except Exception as e:
+            if "a foreign key constraint fails" in str(e).lower() or "1451" in str(e):
+                return "vinculado"
+            print(f"Erro ao remover usuário: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
    
     def editarUsuario(self, nome_usuario: str, atributo: str, valor: str):
            conn = DatabaseConnector().get_connection()

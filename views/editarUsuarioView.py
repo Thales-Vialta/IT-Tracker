@@ -20,7 +20,7 @@ class editarUsuarioView:
 
         if not nome_usuario:
             print(f"{CORES['VERMELHO']}Nome inválido!{CORES['RESET']}")
-            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
         
         if usuarioService(userRepo, cargoService).validarUsuario(nome_usuario):
@@ -76,7 +76,7 @@ class editarUsuarioView:
         else:
             print(f"\n{CORES['VERMELHO']}{validacao}{CORES['RESET']}")
         
-        input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+        input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
 
 
         

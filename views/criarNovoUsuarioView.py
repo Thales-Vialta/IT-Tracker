@@ -20,20 +20,20 @@ class CriarNovoUsuarioView:
 
         if not nome_usuario or nome_usuario == "":
             print(f"{CORES['VERMELHO']}Nome inválido!{CORES['RESET']}")
-            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
         
         if not usuarioService(userRepo, cargoService).validarUsuario(nome_usuario):
             limpar_tela()
             print(f"\n{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{CORES['VERMELHO']} já está cadastrado no sistema!{CORES['RESET']}")
-            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
         cargos_banco = cargoService.capturarCargos()
         
         if not cargos_banco:
             print(f"{CORES['VERMELHO']}Nenhum cargo cadastrado no sistema!{CORES['RESET']}")
-            input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+            input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
         opcoes_cargos = [cargo[1] for cargo in cargos_banco]
@@ -59,4 +59,4 @@ class CriarNovoUsuarioView:
             limpar_tela()
             print(f"\n{CORES['NEGRITO']}{nome_usuario}{CORES['RESET']}{CORES['VERMELHO']}{validacao}{CORES['RESET']}")
 
-        input(f"\n{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+        input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")

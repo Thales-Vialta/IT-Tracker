@@ -33,7 +33,7 @@ class gerenciarUsuariosView:
 
             if opcao == "Ver Usuários Cadastrados":
                 print(usuarioService(userRepo, cargoService).listarUsuarios())
-                input(f"{CORES['AMARELO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Usuário":
                CriarNovoUsuarioView().criar_usuario()
             elif opcao == "Editar Usuários": 
