@@ -39,7 +39,10 @@ class usuarioService:
             numero += 1
             nome = usuario[0]
             cargo = usuario[1]
-            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{numero}. {nome} | {CORES['RESET']} {CORES['RESET']} {cargo}\n"
+
+            num_format = f"{numero}.".ljust(3)
+            nome_format = nome.ljust(35)
+            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{num_format} {nome_format} | {CORES['RESET']} {CORES['RESET']} {cargo}\n"
             
         return resultado
     

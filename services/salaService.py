@@ -13,13 +13,13 @@ class salaService:
         limpar_tela()
         salas = self.sala_repo.listarSalas()
         resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- LISTA DE SALAS ----\n\n{CORES['RESET']}"
-        numero = 0
 
         for sala in salas:
-            numero += 1
             nome_sala = sala[0]
             endereco = sala[1]
-            resultado += f"{CORES['NEGRITO']}{CORES['AMARELO']}{nome_sala} |{CORES['RESET']} {CORES['RESET']} {endereco}\n"
+
+            nome_format = nome_sala.ljust(30)
+            resultado += f"{CORES['NEGRITO']}{CORES['AMARELO']}{nome_format} |{CORES['RESET']} {CORES['RESET']} {endereco}\n"
         
         return resultado
 
