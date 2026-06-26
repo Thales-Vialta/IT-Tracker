@@ -32,5 +32,5 @@ class HorarioRepository:
             cursor.close()
             conn.close()
 
-repo = HorarioRepository()
+horarioRepo = HorarioRepository()
 

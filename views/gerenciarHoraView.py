@@ -3,6 +3,8 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from services.horarioService import horarioService
+
 class gerenciarHoraView:
 
     def gerenciar_horario(self):
@@ -25,8 +27,8 @@ class gerenciarHoraView:
             ).ask()
 
             if opcao == "Ver Horários de Funcionamento":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+                print(horarioService.listarHorarios())
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Horário de Funcionamento":
                 print(" Gerenciar reservas em desenvolvimento")
                 input("enter")
