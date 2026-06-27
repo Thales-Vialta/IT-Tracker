@@ -1,8 +1,5 @@
 from models.horario import Horario
-from repositories.horarioRepository import horarioRepo
-
-from views.limparTela import limpar_tela
-from views.cores import CORES
+from repositories.horarioRepository import HorarioRepository
 
 class horarioService:
 
@@ -10,21 +7,12 @@ class horarioService:
         self.horario_repo = horario_repository
 
     def listarHorarios(self):
-        limpar_tela()
-
         hora = self.horario_repo.Listar_Horario()
+        resultado = "+==========Lista de Horários==========+\n"
 
-        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- LISTA DE HORÁRIOS ----\n\n{CORES['RESET']}"
-
+        # Agora sim, fazemos o laço FOR de verdade para rodar cada registro do banco
         for HoraInicio, HoraFim, Descricao in hora:
-            inicio_str = str(HoraInicio)
-            fim_str = str(HoraFim)
-            periodo = f"{inicio_str} - {fim_str}"
-
-            desc_format = Descricao.ljust(30)
-
-            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{desc_format} | {CORES['RESET']} {CORES['RESET']} {periodo}\n"
+        # Usamos uma f-string para encaixar as variáveis no texto
+            resultado += f"{Descricao} | {HoraInicio} - {HoraFim}\n"
 
         return resultado
-
-horarioService = horarioService(horarioRepo)

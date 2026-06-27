@@ -26,7 +26,13 @@ class usuarioService:
             return " já cadastrado!"
         else:
             idCargo = self.cargo_service.buscarIdCargo(cargo) 
-            self.usuario_repo.inserir_usuario(nomeUsuario, idCargo)
+
+            novo_usuario = Usuario(nomeUsuario, idCargo)
+            nome_puro = novo_usuario.nomeUsuario
+            id_cargo_puro = novo_usuario.idCargo
+            
+            self.usuario_repo.inserir_usuario(nome_puro, id_cargo_puro)
+
             return " cadastrado com sucesso!"
         
     def listarUsuarios(self):
@@ -38,11 +44,7 @@ class usuarioService:
         for usuario in usuarios:
             numero += 1
             nome = usuario[0]
-            cargo = usuario[1]
-
-            num_format = f"{numero}.".ljust(3)
-            nome_format = nome.ljust(35)
-            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{num_format} {nome_format} | {CORES['RESET']} {CORES['RESET']} {cargo}\n"
+            resultado += f"{CORES['AMARELO']}{CORES['NEGRITO']}{numero}.{CORES['RESET']} {nome}\n"
             
         return resultado
     
@@ -62,21 +64,19 @@ class usuarioService:
                 valor = self.cargo_service.buscarIdCargo(valor)
 
                 self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
-                return " atualizado!"    
+                return "Usuário atualizado!"    
             
             else:
                 self.usuario_repo.editarUsuario(nomeUsuario,atributo,valor)
-                return " atualizado!"                  
+                return "Usuário atualizado!"                  
 
     def removerUsuario(self,nomeUsuario):
         validacao = self.validarUsuario(nomeUsuario)
 
         if validacao:
-            return " não encontrado!"
+            return "Usuário não encontrado!"
         else:
-            status = self.usuario_repo.removerUsuario(nomeUsuario)
-            if status == "vinculado":
-                return "não pode ser removido, pois possui reservas vinculadas ao seu nome!"
-            return "removido com sucesso!"
+            self.usuario_repo.removerUsuario(nomeUsuario)
+            return "Usuário removido com sucesso!"
         
 userService = usuarioService(userRepo, cargoService)
