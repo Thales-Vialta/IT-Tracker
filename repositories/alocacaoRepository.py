@@ -39,6 +39,51 @@ class AlocacaoRepository:
             cursor.close()
             conn.close()
 
+
+
+    def Listar_Alocacao(self):
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+            SELECT
+                al.idAlocacao,
+                u.Nome_Usuario,
+                a.Patrimonio,
+                m.Marca,
+                m.Modelo,
+                sa.NomeSala,
+                al.DataAlocacao,
+                al.DataDevolucao
+            FROM Alocacao al
+            JOIN Usuario u ON al.idUsuario = u.idUsuario
+            JOIN Aparelho a ON al.id_Aparelho = a.id_Aparelho
+            JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+            JOIN Sala sa ON sa.idSala = al.idSala;
+        """)
+            return cursor.fetchall()
+        except Exception as e:
+                print(f"Erro ao inserir usuário: {e}")
+        finally:
+            cursor.close()
+            conn.close()  
+
+            
+    def Listar_Alocacao(self, idAlocacao:int):
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute('''SELECT * FROM Alocacao WHERE idAlocacao LIKE %s''', (idAlocacao,))
+            resultado = cursor.fetchall()
+            return resultado
+        except Exception as e:
+                print(f"Erro ao inserir usuário: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+
+        
+
     def Editar_Alocacao(self, idUsuario: int,id_Aparelho:int,idSala:int,DataAlocacao:str,DataDevolucao:str,idAlocacao:int ): 
         conn = DatabaseConnector().get_connection()
         try: 

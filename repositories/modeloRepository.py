@@ -18,6 +18,39 @@ class ModeloRepository:
             cursor.close()
             conn.close()
 
+
+    def listar_Modelos(self): 
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute('''Select m.Marca,m.Modelo, count(a.id_Aparelho) as Quantidade_Disponivel 
+                           from Aparelho a 
+                           join Modelo_Aparelho m on a.idModelo = m.idModelo
+                           left join Alocacao al on a.id_Aparelho = al.id_Aparelho 
+                           and al.DataDevolucao >= NOW()
+                           Where al.idAlocacao is Null
+                           group by m.Marca, m.Modelo Order by m.Marca, m.Modelo''')
+        except Exception as e:
+            print(f"Erro ao inserir usuário: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+    def buscar_Modelo(self,Modelo:str): 
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute('''Select * from Modelo_Aparelho where Modelo like %s''',(Modelo,))
+            resultado = cursor.fetchall()
+            return resultado
+        except ValueError: 
+                print("Erro! Nome vazio")
+        except Exception as e:
+                print(f"Erro ao inserir usuário: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+
+    
     def Aparelhos_menos_Alocados(self):
         conn = DatabaseConnector().get_connection()
         try: 

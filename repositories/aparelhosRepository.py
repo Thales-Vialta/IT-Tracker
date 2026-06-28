@@ -21,7 +21,35 @@ class AparelhoRepository:
         finally:
             cursor.close()
             conn.close()
-
+    def Listar_Todos_Aparelhos():
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+        #trocar essa consulta pra por o modelo dela, fica mais legível no sistema
+            cursor.execute("""SELECT a.id_Aparelho,a.patrimonio,m.Marca,m.Modelo FROM Aparelho a
+            JOIN Modelo_Aparelho m
+            ON a.idModelo=m.idModelo 
+            ORDER BY id_Aparelho""")
+            resultado = cursor.fetchall()
+            return resultado
+        finally: 
+            cursor.close()
+            conn.close()
+    def Buscar_Aparelho(self,idAparelho:int):
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute('''Select * from Aparelho where id_Aparelho like %s''',(idAparelho,))
+            resultado = cursor.fetchall()
+            return resultado
+        except ValueError: 
+                print("Erro! Nome vazio")
+        except Exception as e:
+                print(f"Erro ao inserir usuário: {e}")
+        finally:
+                cursor.close()
+                conn.close()
+                
     def Aparelho_mais_utilizado(self): 
         conn = DatabaseConnector().get_connection()
         try: 

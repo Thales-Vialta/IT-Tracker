@@ -41,7 +41,9 @@ class salaService:
             return "Sala já cadastrada!"
         else:
             nova_sala = Sala(NomeSala, EnderecoSala)
-            self.sala_repo.Inserir_Sala(nova_sala)
+            novoNome = nova_sala.NomeSala
+            novaDic = nova_sala.EnderecoSala
+            self.sala_repo.Inserir_Sala(novoNome, novaDic)
             return "tentando cadastrar sala"
 
     def removerSalas(self, NomeSala: str):

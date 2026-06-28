@@ -53,6 +53,8 @@ class UsuarioRepository:
             return resultado
         except ValueError: 
                 print("Erro! Nome vazio")
+        except Exception as e:
+                print(f"Erro ao inserir usuário: {e}")
         finally:
                 cursor.close()
                 conn.close()
@@ -66,6 +68,8 @@ class UsuarioRepository:
             return resultado
         except ValueError: 
                 print("Erro! Nome vazio")
+        except Exception as e:
+                print(f"Erro ao inserir usuário: {e}")
         finally:
             cursor.close()
             conn.close()
