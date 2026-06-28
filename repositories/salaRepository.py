@@ -3,7 +3,7 @@ from dbConnector.Database import DatabaseConnector
 
 class salaRepository:
 
-    def Inserir_Sala(self, sala): 
+    def Inserir_Sala(self, NomeSala:str,EnderecoSala:str): 
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()     
@@ -11,10 +11,7 @@ class salaRepository:
                         INSERT INTO Sala
                         (NomeSala,EnderecoSala)
                         VALUES (%s,%s)
-                    """,
-                    (
-                        sala.NomeSala,sala.EnderecoSala
-                    ))
+                    """,(NomeSala,EnderecoSala))
             print('sala cadastrada com sucesso')
             conn.commit()
         except Exception as e:

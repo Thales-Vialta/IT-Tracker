@@ -2,7 +2,7 @@ from dbConnector.Database import DatabaseConnector
 
 class HorarioRepository:
 
-    def Inserir_Horario(self, horafunc): 
+    def Inserir_Horario(self, Descricao:str,HoraInicio:str,HoraFim:str): 
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()     
@@ -10,10 +10,7 @@ class HorarioRepository:
                         INSERT INTO HorarioFunc
                         (Descricao,HoraInicio,HoraFim)
                         VALUES (%s,%s,%s)
-                    """,
-                    (
-                        horafunc.Descricao,horafunc.HoraInicio,horafunc.HoraFim
-                    ))
+                    """,(Descricao,HoraInicio,HoraFim))
             conn.commit()
         finally:
             cursor.close()

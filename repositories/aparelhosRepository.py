@@ -3,7 +3,7 @@ from models.aparelhos import *
 
 class AparelhoRepository:
 
-    def inserir_aparelho(self, Aparelhos):
+    def inserir_aparelho(self, serial: str,statusAparelho:str, idModelo: int ):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
@@ -14,7 +14,7 @@ class AparelhoRepository:
                 VALUES (%s,%s,%s)
             """,
             (
-                Aparelhos.serial,Aparelhos.statusAparelho,Aparelhos.idModelo
+                serial,statusAparelho,idModelo
             ))
 
             conn.commit()
@@ -40,25 +40,25 @@ class AparelhoRepository:
             cursor.close()
             conn.close()
 
-    def Editar_Aparelho(self): 
+    def Editar_Aparelho(self,serial: str, idModelo: int,statusAparelho:str): 
         conn = DatabaseConnector().get_connection()
         try: 
             cursor = conn.cursor()
             cursor.execute("""UPDATE Aparelhos 
                            SET patrimonio = %s, idModelo = %s 
-                           WHERE id = %s""",(Aparelhos.serial,Aparelhos.idModelo,Aparelhos.statusAparelho))
+                           WHERE id = %s""",(serial,idModelo,statusAparelho))
             resultado = cursor.fetchall()
             return resultado 
         finally: 
             cursor.close()
             conn.close()
             
-    def Deletar_Aparelho(self): 
+    def Deletar_Aparelho(self,statusAparelho:str): 
             conn = DatabaseConnector().get_connection()
             try: 
                 cursor = conn.cursor()
                 cursor.execute("""Delete from Aparelhos 
-                               WHERE id_Aparelho = %s""",(Aparelhos.statusAparelho))
+                               WHERE id_Aparelho = %s""",(statusAparelho))
                 resultado = cursor.fetchall()
                 return resultado 
             finally: 

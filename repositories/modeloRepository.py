@@ -3,7 +3,7 @@ from models.usuarios import *
 
 class ModeloRepository:
 
-    def inserir_Modelo(self, Modelo):
+    def inserir_Modelo(self, Marca:str,Modelo_do_Aparelho:str):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
@@ -12,11 +12,7 @@ class ModeloRepository:
                 INSERT INTO Modelo
                 (Marca, Modelo)
                 VALUES (%s, %s)
-            """,
-            (
-                Modelo.Marca,
-                Modelo.Modelo_do_Aparelho
-            ))
+            """,(Marca,Modelo_do_Aparelho))
             conn.commit()
         finally:
             cursor.close()
@@ -39,25 +35,25 @@ class ModeloRepository:
             cursor.close()
             conn.close()
     
-    def Editar_Modelo(self,Modelo):
+    def Editar_Modelo(self,Marca:str,Modelo_do_Aparelho:str,idModelo:int):
             conn = DatabaseConnector().get_connection()
             try: 
                 cursor = conn.cursor()
                 cursor.execute("""UPDATE Modelo_Aparelho 
                                SET Marca = %s, Modelo = %s 
-                               WHERE idModelo = %s""",(Modelo.Marca,Modelo.Modelo_do_Aparelho,Modelo.idModelo))
+                               WHERE idModelo = %s""",(Marca,Modelo_do_Aparelho,idModelo))
                 resultado = cursor.fetchall()
                 return resultado 
             finally: 
                 cursor.close()
                 conn.close()
 
-    def Deletar_Aparelho(self,Modelo):
+    def Deletar_Aparelho(self,idModelo:int):
                 conn = DatabaseConnector().get_connection()
                 try: 
                     cursor = conn.cursor()
                     cursor.execute("""Delete from Modelo_Aparelho
-                                   WHERE id_Aparelho = %s""",(Modelo.idModelo))
+                                   WHERE id_Aparelho = %s""",(idModelo))
                     resultado = cursor.fetchall()
                     return resultado 
                 finally: 

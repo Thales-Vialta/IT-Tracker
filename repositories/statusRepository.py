@@ -2,7 +2,7 @@ from dbConnector.Database import DatabaseConnector
 
 class HorarioRepository:
 
-    def Inserir_Horario(self, StatusAparelho): 
+    def Inserir_Horario(self, Descricao:str): 
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()     
@@ -10,10 +10,7 @@ class HorarioRepository:
                         INSERT INTO StatusAparelho
                         (Descricao)
                         VALUES (%s)
-                    """,
-                    (
-                        StatusAparelho.Descricao
-                    ))
+                    """, (Descricao))
             conn.commit()
         finally:
             cursor.close()
@@ -31,13 +28,13 @@ class HorarioRepository:
             cursor.close()
             conn.close()
 
-    def Editar_Aparelho(self,StatusAparelho): 
+    def Editar_Aparelho(self,IdStatus:int,Descricao:str): 
             conn = DatabaseConnector().get_connection()
             try: 
                 cursor = conn.cursor()
                 cursor.execute("""UPDATE Aparelhos 
                                SET Descricao = %s, idModelo = %s 
-                               WHERE id = %s""",(StatusAparelho.IdStatus,StatusAparelho.Descricao))
+                               WHERE id = %s""",(IdStatus,Descricao))
                 resultado = cursor.fetchall()
                 return resultado 
             finally: 
