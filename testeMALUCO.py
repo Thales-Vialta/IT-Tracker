@@ -21,7 +21,6 @@ print(horarioService.tratarHorario(horario))
 print(horarioService.intervaloExiste('08:00:00','17:30:00'))'''
 
 
-service =StatusService(repo)
+status_service = StatusService(repo)
 
-for id_aparelho, patrimonio, modelo in service.listar_manutencao():
-    print(f"ID: {id_aparelho} | Patrimônio: {patrimonio} | Modelo: {modelo}")
+print(status_service.MudarStatus(2, 15))
