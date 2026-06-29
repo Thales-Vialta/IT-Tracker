@@ -1,6 +1,6 @@
 from views.limparTela import limpar_tela
 from views.cores import CORES
-from repositories.aparelhoRepository import repo as aparelhoRepo
+from repositories.aparelhosRepository import repo
 
 class AparelhoService:
 
@@ -87,4 +87,4 @@ class AparelhoService:
 
         return "Erro: Não foi possível remover o aparelho. Certifique-se de que ele não possui alocações vinculadas."
 
-aparelhoService = AparelhoService(aparelhoRepo)
+aparelhoService = AparelhoService(repo)

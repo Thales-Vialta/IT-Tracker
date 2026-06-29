@@ -1,10 +1,9 @@
 from services.horarioService import horarioService
-from repositories.aparelhosRepository import repo
+
 from repositories.horarioRepository import horarioRepo
 from repositories.statusRepository import StatusRepository
 from services.StatusService import StatusService
-
-from services.AparelhoService import AparelhoService
+from repositories.statusRepository import repo
 # print(horarioService.HorarioFuncExiste())
 
 # dados_horario = horarioService.buscarHorario('Horario de Funcionamento')
@@ -22,7 +21,6 @@ print(horarioService.tratarHorario(horario))
 print(horarioService.intervaloExiste('08:00:00','17:30:00'))'''
 
 
+status_service = StatusService(repo)
 
-Aparelho_service = AparelhoService(repo)
-
-print(Aparelho_service.aparelho_existe(32))
+print(status_service.MudarStatus(2, 15))
