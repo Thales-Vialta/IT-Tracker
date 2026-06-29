@@ -1,9 +1,23 @@
 from services.horarioService import horarioService
 
-# print(horarioService.validarTipoHorario())
+from repositories.horarioRepository import horarioRepo
+from repositories.statusRepository import StatusRepository
+from services.StatusService import StatusService
+# print(horarioService.HorarioFuncExiste())
 
-# print(horarioService.criarIntervaloHora('Intervalo 1','09:00','11:00'))
+# dados_horario = horarioService.buscarHorario('Horario de Funcionamento')
+# print(dados_horario)
 
-print(horarioService.removerHorario('Intervalo 1'))
+# # 2. Trata e formata esses dados
+# horario_formatado = horarioService.tratarHorario(dados_horario)
 
-# print(horarioService.validarHorarioExistente('Intervalo 1', '10:00', '11:00'))
+# 3. Exibe o resultado final
+# print(horarioService.intervaloValido('09:00','17:31'))
+
+'''horario = horarioService.buscarHorario('Intervalo teste')
+print(horarioService.tratarHorario(horario))
+
+print(horarioService.intervaloExiste('08:00:00','17:30:00'))'''
+
+print(StatusService.MudarStatus(idAparelho=2,idStatus=15))
+

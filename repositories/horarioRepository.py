@@ -34,8 +34,8 @@ class HorarioRepository:
         try: 
             cursor = conn.cursor()
             cursor.execute('''Select * from HorarioFunc where Descricao like %s''',(Descricao,))
-            resultado = cursor.fetchall()
-            return resultado
+            return cursor.fetchall()
+
         except ValueError: 
             print("Erro! Nome vazio")
         except Exception as e:
@@ -71,5 +71,19 @@ class HorarioRepository:
             cursor.close()
             conn.close()
 
+    def contarConfrontos(self, HoraInicio:str,HoraFim:str):
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            cursor.execute("""SELECT COUNT(*) AS Quantidade FROM HorarioFunc Where HoraInicio = %s And HoraFim = %s ORDER BY Quantidade DESC;""",(HoraInicio,HoraFim))
+            resultado = cursor.fetchall()
+            return resultado
+        except ValueError: 
+            print("Erro! Nome vazio")
+        except Exception as e:
+            print(f"Erro ao inserir usuário: {e}")
+        finally:
+            cursor.close()
+            conn.close() 
 horarioRepo = HorarioRepository()
 

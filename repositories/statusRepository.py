@@ -27,6 +27,16 @@ class StatusRepository:
         finally:
             cursor.close()
             conn.close()
+    def editar_status(self, id_Aparelho, idStatus):
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""UPDATE Aparelho SET idStatus = %s WHERE id_Aparelho = %s """, (idStatus, id_Aparelho))
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
 
     def Editar_Aparelho(self,IdStatus:int,Descricao:str,idAparelho:int): 
             conn = DatabaseConnector().get_connection()
@@ -55,3 +65,4 @@ class StatusRepository:
             finally:
                 cursor.close()
                 conn.close()
+repo = StatusRepository()

@@ -25,177 +25,113 @@ class horarioService:
 
         return resultado
     
-    def validarTipoHorario(self):
+    def HorarioFuncExiste(self):
         horarios_cadastrados = self.horario_repo.Mostrar_Horario()
-        
+    
         for HoraInicio, HoraFim, Descricao in horarios_cadastrados:
             if Descricao.strip() == 'Horario de Funcionamento':
-                return 'Deseja cadastrar um intervalo?'
+                return True
                 
-        return 'Deseja cadastrar o horario de funcionamento?'
+        return False
     
-    
-    def intervaloHora(self):
-            horarios_cadastrados = self.horario_repo.Mostrar_Horario()
-            
-            for HoraInicio, HoraFim, Descricao in horarios_cadastrados:
-                if Descricao.strip() == 'Horario de Funcionamento':
-                    return HoraInicio, HoraFim                   
-            
-            return None
-    
-    def verificarHorarioPermitido(self, hora_I, hora_F):
-            intervalo_funcionamento = self.intervaloHora()
-            
-            if not intervalo_funcionamento:
-                return False
-                
-            func_inicio, func_fim = intervalo_funcionamento
-            
-            str_inicio = str(func_inicio).zfill(8)
-            str_fim = str(func_fim).zfill(8)
-            
-            limite_inicio = str_inicio[:5]
-            limite_fim = str_fim[:5]
+    def tratarHorario(self, valor):
+        resultado = "" 
+        
+        for linha in valor:
+            HoraInicio = linha[1]  
+            HoraFim = linha[2]
+            Descricao = linha[3]
 
-            if hora_I >= limite_inicio and hora_F <= limite_fim:
-                if hora_I < hora_F:
-                    return True
-                    
+        inicio_str = str(HoraInicio).zfill(8)[:5]
+        fim_str = str(HoraFim).zfill(8)[:5]
+           
+            
+        return Descricao, inicio_str, fim_str
+    
+    def buscarHorario(self,valor):
+        horario = self.horario_repo.buscar_Horario(valor)
+        return horario
+    
+    def intervaloValido(self, inicio, fim):
+        horario_funcionamento = self.buscarHorario('Horario de Funcionamento')
+
+        horario_tratado = self.tratarHorario(horario_funcionamento)
+
+        _, func_inicio, func_fim = horario_tratado
+        print(func_inicio)
+        print(inicio)
+        print(func_fim)
+        print(fim)
+
+        if inicio > func_inicio and fim < func_fim:
+            return True
+        else:
             return False
         
-    def validarHorarioExistente(self, desc, hora_I, hora_F, id_atual=None):
-                dados_banco = self.horario_repo.buscar_Horario(desc)
-                
-                if not dados_banco:
-                    dados_banco = self.horario_repo.Mostrar_Horario() # Atualizado para bater com seu Mostrar_Horario()
-                    
-                    if not dados_banco:
-                        return False
+    def intervaloExiste(self, inicio, fim):
+        total = self.horario_repo.contarConfrontos(inicio,fim)
 
-                for registro in dados_banco:
-                    if len(registro) == 4:
-                        id_banco, hora_inicio, hora_fim, descricao = registro
-                        # Pula a verificação se o registro analisado for o mesmo que estamos editando
-                        if id_atual and id_banco == id_atual:
-                            continue
-                    else:
-                        hora_inicio, hora_fim, descricao = registro
-                    
-                    inicio_limpo = str(hora_inicio).zfill(8)[:5]
-                    fim_limpo = str(hora_fim).zfill(8)[:5]
-                    descricao_limpa = descricao.strip()
+        totalPuro = total[0][0]
+        print(totalPuro)
 
-                    if descricao_limpa == desc.strip() and inicio_limpo == hora_I.strip() and fim_limpo == hora_F.strip():
-                        return True
-                        
-                    if inicio_limpo == hora_I.strip() and fim_limpo == hora_F.strip():
-                        return True
-                        
-                return False
-
-
-    def criarIntervaloHora(self, desc, inicio, fim):
-        desc_limpa = desc.strip()
-
-        if self.validarHorarioExistente(desc_limpa, inicio, fim):
-            return f"Erro: O horário ou a descrição '{desc_limpa}' ({inicio} às {fim}) já está em uso!"
-
-        # CASO 1: Se for o horário principal, cadastra direto
-        if desc_limpa == 'Horario de Funcionamento':
-            self.horario_repo.Cadastrar_Horario(desc, inicio, fim)
-            return 'Horário de Funcionamento cadastrado com sucesso!'
-
-        # CASO 2: Se for um intervalo (Almoço, Café, etc), valida os limites
-        else:
-            if not self.intervaloHora():
-                return 'Erro: Cadastre primeiro o Horário de Funcionamento do estabelecimento!'
-
-            validacao = self.verificarHorarioPermitido(inicio, fim)
-
-            if not validacao:
-                return 'Intervalo inadequado! Deve estar dentro do horário de funcionamento.'
-            
-            self.horario_repo.Cadastrar_Horario(desc, inicio, fim)
-            return 'Intervalo cadastrado com sucesso!'
+        if totalPuro == 0:
+            return "Nenhum intervalo com essas horas"
         
-    def buscarIdPorDescricao(self, desc: str):
-        # 1. Busca os registros no banco usando a descrição
-        dados_banco = self.horario_repo.buscar_Horario(desc)
+        if totalPuro == 1:
+            return "Continue"
         
-        # 2. Se não encontrar nada, avisa a View
-        if not dados_banco:
-            return None
-            
-        # 3. Como o buscar_Horario retorna uma lista de tuplas,
-        # pegamos o idHorarioFunc (primeira coluna) do primeiro registro encontrado
-        # Ordem: (idHorarioFunc, HoraInicio, HoraFim, Descricao)
-        id_horario = dados_banco[0][0]
+        if totalPuro == 2:
+            return 'O sistema quebrou, pois isso não deveria ser possivel'
         
-        return id_horario
+    def criarIntervalo(self, desc, inicio, fim):
+        if inicio >= fim:
+            return f"{CORES['VERMELHO']}Erro: O horário de início não pode ser maior ou igual ao término.{CORES['RESET']}"
+
+        # 2. Primeira Validação: O horário está dentro do expediente da empresa?
+        if not self.intervaloValido(inicio, fim):
+            return f"{CORES['VERMELHO']}Erro: O horário solicitado está fora do limite de funcionamento da empresa.{CORES['RESET']}"
+
+        # 3. Segunda Validação: Esse intervalo específico já existe no banco?
+        status_confronto = self.intervaloExiste(inicio, fim)
         
-    def atualizarHorario(self, desc_antiga: str, atributo: str, valor: str):
-        # 1. Validação de Existência (Igual ao seu "Usuário não encontrado!")
-        horario_atual = self.horario_repo.buscar_Horario(desc_antiga)
-
-        if not horario_atual:
-            return "Horário não encontrado!"
+        if status_confronto == "Continue":
+            return f"{CORES['AMARELO']}Aviso: Esse intervalo de horário já está cadastrado no sistema.{CORES['RESET']}"
         
-        else:
-            # Desempacota o estado atual vindo do banco (id, inicio, fim, descricao)
-            id_horario, inicio_banco, fim_banco, desc_banco = horario_atual[0]
-            
-            # Traduz os timedeltas do MySQL para strings limpas "HH:MM"
-            inicio_atual = str(inicio_banco).zfill(8)[:5]
-            fim_atual = str(fim_banco).zfill(8)[:5]
-            desc_atual = desc_banco.strip()
+        if status_confronto == 'O sistema quebrou, pois isso não deveria ser possivel':
+            return f"{CORES['VERMELHO']}Erro Crítico: Duplicidade inconsistente encontrada no banco de dados.{CORES['RESET']}"
 
-            # Padroniza o nome do atributo para o formato aceito pelas colunas do banco
-            if atributo in ['inicio', 'HoraInicio']:
-                atributo = 'HoraInicio'
-            elif atributo in ['fim', 'HoraFim']:
-                atributo = 'HoraFim'
-            elif atributo in ['descricao', 'Descricao']:
-                atributo = 'Descricao'
-
-            # 2. Preparação do cenário futuro para validação
-            # Se o atributo alterado não for este, ele mantém o valor atual do banco
-            nova_desc = valor.strip() if atributo == 'Descricao' else desc_atual
-            novo_inicio = valor.strip() if atributo == 'HoraInicio' else inicio_atual
-            novo_fim = valor.strip() if atributo == 'HoraFim' else fim_atual
-
-            # 3. BLOCO DE VALIDAÇÕES DE HORÁRIO
-            
-            # Validação A: Evitar duplicidade de nome ou choque de horários idênticos
-            if self.validarHorarioExistente(nova_desc, novo_inicio, novo_fim, id_atual=id_horario):
-                return "Erro: Esse horário ou descrição já está em uso por outro registro!"
-
-            # Se o horário atual (ou o novo nome) não for o principal, valida as regras de limites
-            if nova_desc != 'Horario de Funcionamento':
-                # Validação B: Verificar se o horário pai de funcionamento existe
-                if not self.intervaloHora():
-                    return "Erro: Cadastre primeiro o Horário de Funcionamento!"
-                
-                # Validação C: Verificar se as novas horas cabem dentro do expediente principal
-                if not self.verificarHorarioPermitido(novo_inicio, novo_fim):
-                    return "Intervalo inadequado! Deve estar dentro do horário de funcionamento."
-
-            # 4. SALVAMENTO DINÂMICO (Seguindo o molde do seu atualizaUsuario)
-            self.horario_repo.Editar_Horario(atributo, valor, desc_antiga)
-            return f"{atributo} atualizado!"
+        # 4. Se passou por tudo, realiza a inserção
+        try:
+            # Substitua 'salvar_Horario' pelo nome exato do seu método de inserção no repositório
+            self.horario_repo.Cadastrar_Horario(desc, inicio, fim) 
+            return f"{CORES['VERDE']}Intervalo '{desc}' ({inicio} - {fim}) criado com sucesso!{CORES['RESET']}"
+        except Exception as e:
+            return f"{CORES['VERMELHO']}Erro ao salvar o horário no banco de dados: {e}{CORES['RESET']}"        
+    def editarIntervalo(self, id_horario, nova_desc, novo_inicio, novo_fim):
+        """Edita um intervalo existente no banco validando as regras de negócio."""
         
-    def removerHorario(self, desc_horario: str):
-        # Buscamos o horário para saber se ele realmente existe no banco
-        validacao = self.horario_repo.buscar_Horario(desc_horario)
+        # 1. Validação básica de consistência temporal
+        if novo_inicio >= novo_fim:
+            return f"{CORES['VERMELHO']}Erro: O horário de início não pode ser maior ou igual ao término.{CORES['RESET']}"
 
-        if not validacao:
-            return "Horário não encontrado!"
-        
-        else:
-            self.horario_repo.remover_Horario(desc_horario)
-            
-           
-            return "Horário removido com sucesso!"
+        # 2. Verifica se a alteração respeita o horário master da empresa
+        if not self.intervaloValido(novo_inicio, novo_fim):
+            return f"{CORES['VERMELHO']}Erro: Os novos horários estão fora do limite de funcionamento da empresa.{CORES['RESET']}"
+
+        # 3. Tratamento para evitar falsos bloqueios de duplicados
+        status_confronto = self.intervaloExiste(novo_inicio, novo_fim)
+        if status_confronto == 'O sistema quebrou, pois isso não deveria ser possivel':
+            return f"{CORES['VERMELHO']}Erro Crítico: Inconsistência gravíssima detectada no banco.{CORES['RESET']}"
+
+        # 4. Envia para atualização usando o ID (Necessário por causa do Safe Update Mode)
+        try:
+            # Garanta que o método 'Editar_Horario' exista em seu repositório recebendo (id, desc, inicio, fim)
+            # O SQL dele deve ser: UPDATE HorarioFunc SET Descricao=%s, HoraInicio=%s, HoraFim=%s WHERE idHorario=%s
+            self.horario_repo.Editar_Horario(id_horario, nova_desc, novo_inicio, novo_fim)
+            return f"{CORES['VERDE']}Intervalo ID {id_horario} atualizado com sucesso para '{nova_desc}' ({novo_inicio} - {novo_fim})!{CORES['RESET']}"
+        except Exception as e:
+            return f"{CORES['VERMELHO']}Erro ao atualizar o horário no banco de dados: {e}{CORES['RESET']}"
+
 
 
 horarioService = horarioService(horarioRepo)
