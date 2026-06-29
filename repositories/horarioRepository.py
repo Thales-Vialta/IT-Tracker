@@ -44,20 +44,22 @@ class HorarioRepository:
             cursor.close()
             conn.close() 
 
-    def remover_Horario(self,Descricao): 
+    def remover_Horario(self,id_horario): 
         conn = DatabaseConnector().get_connection()
-        try: 
+        try:
             cursor = conn.cursor()
-            cursor.execute('''Delete from HorarioFunc where Descricao like %s''',(Descricao,))
-            resultado = cursor.fetchall()
-            return resultado
-        except ValueError: 
-            print("Erro! Nome vazio")
+            cursor.execute('''DELETE FROM HorarioFunc WHERE idHorario = %s''', (id_horario,))
+            conn.commit()
+            return True
         except Exception as e:
-            print(f"Erro ao inserir usuário: {e}")
+            if "a foreign key constraint fails" in str(e).lower() or "1451" in str(e):
+                return "vinculado" # Caso o horário já esteja em uso por algum funcionário
+            print(f"Erro ao remover horário: {e}")
+            return False
         finally:
             cursor.close()
-            conn.close() 
+            conn.close()
+            
     def Mostrar_Horario(self):
         conn = DatabaseConnector().get_connection()
         try:
@@ -85,5 +87,30 @@ class HorarioRepository:
         finally:
             cursor.close()
             conn.close() 
+
+    def descobrirIdPorDescricao(self, Descricao: str):
+        conn = DatabaseConnector().get_connection()
+        try: 
+            cursor = conn.cursor()
+            
+            # 1. Buscamos apenas a coluna do ID filtrando pela descrição exata
+            # Nota: mude 'idHorario' para o nome real da sua coluna de ID se for diferente
+            query = "SELECT idHorario FROM HorarioFunc WHERE Descricao = %s"
+            
+            cursor.execute(query, (Descricao,))
+            resultado = cursor.fetchone()
+            
+            # 2. Se o banco encontrou o registro, extrai o ID de dentro da tupla
+            if resultado:
+                return resultado[0] # Retorna o int puro (ex: 3)
+                
+            return None # Retorna None se não achar nenhuma linha com essa descrição
+
+        except Exception as e:
+            print(f"Erro ao descobrir ID do horário: {e}")
+            return None
+        finally:
+            cursor.close()
+            conn.close()
 horarioRepo = HorarioRepository()
 

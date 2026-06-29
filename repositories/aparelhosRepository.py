@@ -23,7 +23,7 @@ class AparelhoRepository:
             cursor.close()
             conn.close()
 
-    def Listar_Todos_Aparelhos():
+    def Listar_Todos_Aparelhos(self):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
@@ -61,7 +61,6 @@ class AparelhoRepository:
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
-            # trocar essa consulta pra por o modelo dela, fica mais legível no sistema
             cursor.execute(
                 """SELECT patrimonio AS Aparelho_mais_utilizado from Aparelho
             WHERE id_Aparelho = (

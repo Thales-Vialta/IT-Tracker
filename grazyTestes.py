@@ -1,3 +1,8 @@
 from services.horarioService import horarioService
+from repositories.horarioRepository import horarioRepo
+from services.modeloService import modeloServ
 
-print(horarioService.criarIntervalo('Intervalo 2','11:30', '12:00'))
+print(modeloServ.removerModelo('Inspirion 1x'))
+
+
+# print(horarioService.removerIntervalo('Intervalo 1'))

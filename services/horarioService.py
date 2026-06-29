@@ -107,31 +107,44 @@ class horarioService:
             return f"{CORES['VERDE']}Intervalo '{desc}' ({inicio} - {fim}) criado com sucesso!{CORES['RESET']}"
         except Exception as e:
             return f"{CORES['VERMELHO']}Erro ao salvar o horário no banco de dados: {e}{CORES['RESET']}"        
+    
     def editarIntervalo(self, id_horario, nova_desc, novo_inicio, novo_fim):
         """Edita um intervalo existente no banco validando as regras de negócio."""
         
-        # 1. Validação básica de consistência temporal
         if novo_inicio >= novo_fim:
             return f"{CORES['VERMELHO']}Erro: O horário de início não pode ser maior ou igual ao término.{CORES['RESET']}"
 
-        # 2. Verifica se a alteração respeita o horário master da empresa
         if not self.intervaloValido(novo_inicio, novo_fim):
             return f"{CORES['VERMELHO']}Erro: Os novos horários estão fora do limite de funcionamento da empresa.{CORES['RESET']}"
 
-        # 3. Tratamento para evitar falsos bloqueios de duplicados
         status_confronto = self.intervaloExiste(novo_inicio, novo_fim)
         if status_confronto == 'O sistema quebrou, pois isso não deveria ser possivel':
             return f"{CORES['VERMELHO']}Erro Crítico: Inconsistência gravíssima detectada no banco.{CORES['RESET']}"
 
-        # 4. Envia para atualização usando o ID (Necessário por causa do Safe Update Mode)
         try:
-            # Garanta que o método 'Editar_Horario' exista em seu repositório recebendo (id, desc, inicio, fim)
-            # O SQL dele deve ser: UPDATE HorarioFunc SET Descricao=%s, HoraInicio=%s, HoraFim=%s WHERE idHorario=%s
             self.horario_repo.Editar_Horario(id_horario, nova_desc, novo_inicio, novo_fim)
             return f"{CORES['VERDE']}Intervalo ID {id_horario} atualizado com sucesso para '{nova_desc}' ({novo_inicio} - {novo_fim})!{CORES['RESET']}"
         except Exception as e:
             return f"{CORES['VERMELHO']}Erro ao atualizar o horário no banco de dados: {e}{CORES['RESET']}"
 
+    def removerIntervalo(self, desc):
+            
+            id = self.horario_repo.descobrirIdPorDescricao(desc)
+
+            if not id:
+                return f"{CORES['VERMELHO']}Erro: É necessário informar um ID válido para exclusão.{CORES['RESET']}"
+
+            try:
+
+                linhas_afetadas = self.horario_repo.remover_Horario(id)
+                
+                if linhas_afetadas == 0:
+                    return f"{CORES['AMARELO']}Aviso: Nenhum intervalo foi encontrado com o ID {id}.{CORES['RESET']}"
+                    
+                return f"{CORES['VERDE']}Intervalo ID {id} removido com sucesso do sistema!{CORES['RESET']}"
+                
+            except Exception as e:
+                return f"{CORES['VERMELHO']}Erro ao remover o horário do banco de dados: {e}{CORES['RESET']}"
 
 
 horarioService = horarioService(horarioRepo)

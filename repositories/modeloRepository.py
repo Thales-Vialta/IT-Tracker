@@ -9,7 +9,7 @@ class ModeloRepository:
             cursor = conn.cursor()
 
             cursor.execute("""
-                INSERT INTO Modelo
+                INSERT INTO Modelo_Aparelho
                 (Marca, Modelo)
                 VALUES (%s, %s)
             """,(Marca,Modelo_do_Aparelho))
@@ -30,11 +30,14 @@ class ModeloRepository:
                            and al.DataDevolucao >= NOW()
                            Where al.idAlocacao is Null
                            group by m.Marca, m.Modelo Order by m.Marca, m.Modelo''')
+            resultado = cursor.fetchall()
+            return resultado
         except Exception as e:
             print(f"Erro ao inserir usuário: {e}")
         finally:
             cursor.close()
             conn.close()
+
     def buscar_Modelo(self,Modelo:str): 
         conn = DatabaseConnector().get_connection()
         try: 
@@ -81,14 +84,18 @@ class ModeloRepository:
                 cursor.close()
                 conn.close()
 
-    def Deletar_Aparelho(self,idModelo:int):
+    def Deletar_Modelo(self,idModelo:int):
                 conn = DatabaseConnector().get_connection()
                 try: 
                     cursor = conn.cursor()
                     cursor.execute("""Delete from Modelo_Aparelho
-                                   WHERE id_Aparelho = %s""",(idModelo))
-                    resultado = cursor.fetchall()
-                    return resultado 
+                                   WHERE idModelo = %s""",(idModelo,))
+                    conn.commit()
+                    return cursor.rowcount
+                except Exception as e:
+                    print(f"Erro no serviço ao remover modelo: {e}")
                 finally: 
                     cursor.close()
                     conn.close()
+
+modeloRepo = ModeloRepository()
