@@ -3,6 +3,7 @@ from services.horarioService import horarioService
 from repositories.horarioRepository import horarioRepo
 from repositories.statusRepository import StatusRepository
 from services.StatusService import StatusService
+from repositories.statusRepository import repo
 # print(horarioService.HorarioFuncExiste())
 
 # dados_horario = horarioService.buscarHorario('Horario de Funcionamento')
@@ -19,5 +20,8 @@ print(horarioService.tratarHorario(horario))
 
 print(horarioService.intervaloExiste('08:00:00','17:30:00'))'''
 
-print(StatusService.MudarStatus(idAparelho=2,idStatus=15))
 
+service =StatusService(repo)
+
+for id_aparelho, patrimonio, modelo in service.listar_manutencao():
+    print(f"ID: {id_aparelho} | Patrimônio: {patrimonio} | Modelo: {modelo}")

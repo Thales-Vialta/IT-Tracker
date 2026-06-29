@@ -35,6 +35,10 @@ class UsuarioRepository:
             FROM Alocacao)""")
             resultado = cursor.fetchall()
             return resultado
+        except ValueError: 
+            print("Erro! Nome vazio")
+        except Exception as e:
+            print(f"Erro ao inserir usuário: {e}")
         finally: 
             cursor.close()
             conn.close()
@@ -91,14 +95,19 @@ class UsuarioRepository:
             conn.close()
    
     def editarUsuario(self, nome_usuario: str, atributo: str, valor: str):
-           conn = DatabaseConnector().get_connection()
-           try:
-               cursor = conn.cursor()
-               query = f"UPDATE Usuario SET {atributo} = %s WHERE Nome_Usuario = %s"
-               cursor.execute(query, (valor, nome_usuario))
-               conn.commit()
-           finally:
-               cursor.close()
-               conn.close()
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            query = f"UPDATE Usuario SET {atributo} = %s WHERE Nome_Usuario = %s"
+            cursor.execute(query, (valor, nome_usuario))
+            conn.commit()
+        except ValueError: 
+            print("Erro! Nome vazio")
+        except Exception as e:
+            print(f"Erro ao inserir usuário: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+
 
 userRepo = UsuarioRepository()
