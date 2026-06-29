@@ -15,6 +15,7 @@ class HorarioRepository:
         finally:
             cursor.close()
             conn.close()
+            
     def Editar_Horario(self, atributo , novo_valor, descricao):
         conn = DatabaseConnector().get_connection()
         try:
