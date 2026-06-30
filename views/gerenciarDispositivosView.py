@@ -3,6 +3,9 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from views.gerenciarModelosView import gerenciarModelosView
+from services.AparelhoService import aparelhoService
+
 class gerenciarDispositivosView:
 
     def gerenciar_dispositivos(self):
@@ -16,6 +19,7 @@ class gerenciarDispositivosView:
                 qmark=" ",
                 style=minhas_cores,
                 choices=[
+                    "Gerenciar Modelos",
                     "Ver Dispositivos Cadastrados",
                     "Criar Novo Dispositivo",
                     "Editar Dispositivos",
@@ -24,9 +28,11 @@ class gerenciarDispositivosView:
                 ]
             ).ask()
 
-            if opcao == "Ver Dispositivos Cadastrados":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+            if opcao == "Gerenciar Modelos":
+                gerenciarModelosView.gerenciar_modelos()
+            elif opcao == "Ver Dispositivos Cadastrados":
+                print(aparelhoService.listar_aparelhos())    
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Dispositivo":
                 print(" Gerenciar reservas em desenvolvimento")
                 input("enter")

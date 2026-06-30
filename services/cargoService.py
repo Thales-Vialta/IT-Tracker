@@ -1,4 +1,4 @@
-from repositories.cargoRepository import repo
+from repositories.cargoRepository import repoCar
 
 class CargoService:
 
@@ -12,4 +12,4 @@ class CargoService:
         return self.cargo_repo.buscarIdCargo(cargo)
     
 
-cargoService = CargoService(repo)
+cargoService = CargoService(repoCar)

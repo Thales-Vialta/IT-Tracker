@@ -1,4 +1,4 @@
-from repositories.statusRepository import repo
+from repositories.statusRepository import statusRepo
 
 class StatusService:
 
@@ -25,4 +25,4 @@ class StatusService:
     def listar_status(self):
         return self.status_repo.Listar_Aparelhos_Status()
     
-statusServ = StatusService(repo)
+statusServ = StatusService(statusRepo)

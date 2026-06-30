@@ -6,8 +6,6 @@ from views.cores import minhas_cores
 from views.gerenciarUsuariosView import gerenciarUsuariosView  
 from views.gerenciarSalaView import gerenciarSalaView 
 from views.gerenciarHoraView import gerenciarHoraView
-from views.backupView import backupView  
-from views.formatarDadosView import formatarDadosView
 
 class configView:
     def config(self):
@@ -23,9 +21,7 @@ class configView:
                 choices=[
                     "Gerenciar Usuários",
                     "Gerenciar Salas",
-                    "Gerenciar Horário de Funcionamento",
-                    "Backup de Dados",
-                    "Formatar Dados",
+                    "Gerenciar Horários",
                     "Voltar"                
                 ]
             ).ask()
@@ -34,11 +30,7 @@ class configView:
                 gerenciarUsuariosView().gerenciar_usuarios()
             elif opcao == "Gerenciar Salas":                 
                 gerenciarSalaView().gerenciar_sala()
-            elif opcao == "Gerenciar Horário de Funcionamento": 
+            elif opcao == "Gerenciar Horários": 
                 gerenciarHoraView().gerenciar_horario()
-            elif opcao == "Backup de Dados":
-                backupView().backup()
-            elif opcao == "Formatar Dados":
-                formatarDadosView().formatar_dados()
             elif opcao == "Voltar":
                 break

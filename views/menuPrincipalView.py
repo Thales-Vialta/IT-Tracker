@@ -8,6 +8,9 @@ from views.configView import configView
 from views.visualReservasView import visualizarReservasView
 from views.gerenciarReservasView import gerenciarReservasView 
 from views.gerenciarDispositivosView import gerenciarDispositivosView
+from views.manutencaoView import ManutencaoView
+
+from services.ManutencaoService import manutencaoServe
 
 class menuPrincipalView:
     def titulo(self):
@@ -25,6 +28,10 @@ class menuPrincipalView:
             limpar_tela()
             self.titulo()
 
+            total_tupla = manutencaoServe.obter_quantidade_em_manutencao()
+            total = total_tupla[0] if total_tupla else 0
+            texto_manutencao = f"Manutenção ({total})"
+
             opcao = questionary.select(
                 "Selecione uma opção:",
                 instruction=" ",
@@ -34,7 +41,7 @@ class menuPrincipalView:
                     "Visualizar Reservas",
                     "Gerenciar Reservas",
                     "Gerenciar Dispositivos",
-                    "Manutenção",
+                    texto_manutencao,
                     "Configurações",
                     "Sair"                
                 ]
@@ -46,9 +53,8 @@ class menuPrincipalView:
                 gerenciarReservasView().gerenciar_reservas()
             elif opcao == "Gerenciar Dispositivos":
                 gerenciarDispositivosView().gerenciar_dispositivos()
-            elif opcao == "Manutenção":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+            elif opcao and opcao.startswith("Manutenção"):
+                ManutencaoView().manutencao()
             elif opcao == "Configurações":
                 configView().config()
             elif opcao == "Sair":

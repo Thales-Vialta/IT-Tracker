@@ -1,3 +1,7 @@
-from services.alocacaoService import alocacaoServ
+from repositories.aparelhosRepository import repo
 
-print(alocacaoServ.validarAlocacao('2026-06-14 08:30:00','2026-06-15 17:45:00'))
+aparelhosDisp = repo.Listar_Aparelhos_Disponiveis()
+
+for id_ap, patrimonio, marca, modelo in aparelhosDisp:
+    print(f"ID: {id_ap} | Pat: {patrimonio} | {marca} - {modelo}")
+print()

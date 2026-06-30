@@ -4,6 +4,9 @@ from views.cores import CORES
 from views.cores import minhas_cores
 
 from services.horarioService import horarioService
+from views.criarNovoHorarioView import criarHorarioView
+from views.editarHorarioView import EditarHorarioView
+from views.removerHorarioView import RemoverHorarioView
 
 class gerenciarHoraView:
 
@@ -18,25 +21,22 @@ class gerenciarHoraView:
                 qmark=" ",
                 style=minhas_cores,
                 choices=[
-                    "Ver Horários de Funcionamento",
-                    "Criar Novo Horário de Funcionamento",
-                    "Editar Horário de Funcionamento",
-                    "Deletar Horário de Funcionamento",
+                    "Ver Horários",
+                    "Criar Novo Horário",
+                    "Editar Horário",
+                    "Deletar Horário",
                     "Voltar"                
                 ]
             ).ask()
 
-            if opcao == "Ver Horários de Funcionamento":
+            if opcao == "Ver Horários":
                 print(horarioService.listarHorarios())
                 input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
-            elif opcao == "Criar Novo Horário de Funcionamento":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
-            elif opcao == "Editar Horário de Funcionamento": 
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
-            elif opcao == "Deletar Horário de Funcionamento":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+            elif opcao == "Criar Novo Horário":
+                criarHorarioView().criar_horario()
+            elif opcao == "Editar Horário": 
+                EditarHorarioView().editar_horario()
+            elif opcao == "Deletar Horário":
+                RemoverHorarioView().remover_horario()
             elif opcao == "Voltar":
                 break

@@ -3,80 +3,69 @@ from models.usuarios import *
 
 class ModeloRepository:
 
-    def inserir_Modelo(self, Marca:str,Modelo_do_Aparelho:str):
+    def inserir_Modelo(self, idMarca: int, modelo: str):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
 
-            cursor.execute("""
-                INSERT INTO Modelo_Aparelho
-                (Marca, Modelo)
-                VALUES (%s, %s)
-            """,(Marca,Modelo_do_Aparelho))
+            cursor.execute("""INSERT INTO Modelo_Aparelho(IDMarca, Modelo)VALUES (%s, %s)
+        """, (idMarca, modelo))
             conn.commit()
         finally:
             cursor.close()
             conn.close()
 
 
-    def listar_Modelos(self): 
+    def listar_Modelos(self):
         conn = DatabaseConnector().get_connection()
-        try: 
+
+        try:
             cursor = conn.cursor()
-            cursor.execute('''Select m.Marca,m.Modelo, count(a.id_Aparelho) as Quantidade_Disponivel 
-                           from Aparelho a 
-                           join Modelo_Aparelho m on a.idModelo = m.idModelo
-                           left join Alocacao al on a.id_Aparelho = al.id_Aparelho 
-                           and al.DataDevolucao >= NOW()
-                           Where al.idAlocacao is Null
-                           group by m.Marca, m.Modelo Order by m.Marca, m.Modelo''')
-            resultado = cursor.fetchall()
-            return resultado
-        except Exception as e:
-            print(f"Erro ao inserir usuário: {e}")
+
+            cursor.execute("""
+            SELECT
+                ma.Marca,
+                mo.Modelo,
+                COUNT(a.id_Aparelho) AS Quantidade_Disponivel
+            FROM Modelo_Aparelho mo
+            INNER JOIN Marca ma
+                ON mo.idMarca = ma.idMarca
+            LEFT JOIN Aparelho a
+                ON mo.idModelo = a.idModelo
+            LEFT JOIN Alocacao al
+                ON a.id_Aparelho = al.id_Aparelho
+                AND al.DataDevolucao >= NOW()
+            WHERE al.idAlocacao IS NULL
+            GROUP BY ma.Marca, mo.Modelo
+            ORDER BY ma.Marca, mo.Modelo;""")
+
+            return cursor.fetchall()
         finally:
             cursor.close()
             conn.close()
 
-    def buscar_Modelo(self,Modelo:str): 
+    def buscar_Modelo(self, modelo):
         conn = DatabaseConnector().get_connection()
-        try: 
+
+        try:
             cursor = conn.cursor()
-            cursor.execute('''Select * from Modelo_Aparelho where Modelo like %s''',(Modelo,))
-            resultado = cursor.fetchall()
-            return resultado
-        except ValueError: 
-                print("Erro! Nome vazio")
-        except Exception as e:
-                print(f"Erro ao inserir usuário: {e}")
+
+            cursor.execute("""SELECT mo.idModelo, ma.Marca, mo.Modelo
+            FROM Modelo_Aparelho mo
+            INNER JOIN Marca ma
+            ON mo.idMarca = ma.idMarca
+            WHERE mo.Modelo LIKE %s""", (modelo,))
+            return cursor.fetchall()
+
         finally:
             cursor.close()
             conn.close()
 
-    
-    def Aparelhos_menos_Alocados(self):
-        conn = DatabaseConnector().get_connection()
-        try: 
-            cursor = conn.cursor()
-
-            cursor.execute("""Select a.patrimonio, m.Marca, m.Modelo, COUNT(al.idAlocacao) as Aparelhos_menos_Alocados
-            from Aparelho a INNER JOIN Modelo_Aparelho m 
-            ON a.idModelo = m.idModelo 
-            LEFT JOIN Alocacao al on a.id_Aparelho = al.id_Aparelho 
-            group by a.id_Aparelho
-            ORDER BY Aparelhos_menos_Alocados;""")
-            resultado = cursor.fetchall()
-            return resultado
-        finally:
-            cursor.close()
-            conn.close()
-    
     def Editar_Modelo(self, id, atributo, valor):
             conn = DatabaseConnector().get_connection()
             try: 
                 cursor = conn.cursor()
                 
-                # CORREÇÃO: Removida a palavra 'valor' intruza e ajustada a query SQL
                 query = f"UPDATE Modelo_Aparelho SET {atributo} = %s WHERE idModelo = %s"
                 
                 cursor.execute(query, (valor, id))

@@ -139,34 +139,64 @@ class AlocacaoRepository:
         finally:
             cursor.close()
             conn.close()
-    def Listar_Alocacao_Gap_Data(self, data_inicio, data_fim):
+
+    def Listar_Aparelhos_Disponiveis(self, data_inicio, data_fim, marca_desejada):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute(
+            
+            # 1ª TENTATIVA: Buscar disponíveis da MARCA ESPECÍFICA
+            query_marca = """
+                SELECT 
+                    a.id_Aparelho, 
+                    a.patrimonio, 
+                    m.Marca, 
+                    m.Modelo
+                FROM Aparelho a
+                JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+                WHERE m.Marca = %s 
+                AND a.id_Aparelho NOT IN (
+                    SELECT id_Aparelho 
+                    FROM Alocacao 
+                    WHERE DataAlocacao < %s 
+                    AND DataDevolucao > %s
+                );
             """
-            SELECT
-                al.idAlocacao,
-                u.Nome_Usuario,
-                a.Patrimonio,
-                m.Marca,
-                m.Modelo,
-                sa.NomeSala,
-                al.DataAlocacao,
-                al.DataDevolucao
-            FROM Alocacao al
-            JOIN Usuario u ON al.idUsuario = u.idUsuario
-            JOIN Aparelho a ON al.id_Aparelho = a.id_Aparelho
-            JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
-            JOIN Sala sa ON sa.idSala = al.idSala
-            WHERE al.DataAlocacao = %s AND al.Datadevolucao = %s; """,
-            (data_inicio, data_fim)
-        )
+            
+            # Executa passando a marca, data_fim e data_inicio
+            cursor.execute(query_marca, (marca_desejada, data_fim, data_inicio))
+            resultado = cursor.fetchall()
+            
+            # Se encontrou aparelhos da marca desejada, já retorna eles
+            if resultado:
+                return resultado
+                
+            # 2ª TENTATIVA: Se não achou nenhum daquela marca, busca QUALQUER marca disponível
+            print(f"Nenhum aparelho da marca '{marca_desejada}' disponível. Buscando alternativas...")
+            
+            query_geral = """
+                SELECT 
+                    a.id_Aparelho, 
+                    a.patrimonio, 
+                    m.Marca, 
+                    m.Modelo
+                FROM Aparelho a
+                JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+                WHERE a.id_Aparelho NOT IN (
+                    SELECT id_Aparelho 
+                    FROM Alocacao 
+                    WHERE DataAlocacao < %s 
+                    AND DataDevolucao > %s
+                );
+            """
+            
+            cursor.execute(query_geral, (data_fim, data_inicio))
             return cursor.fetchall()
 
         except Exception as e:
-            print(f"Erro ao listar alocações: {e}")
-
+            print(f"Erro ao listar aparelhos disponíveis: {e}")
+            return []
+            
         finally:
             cursor.close()
             conn.close()

@@ -31,4 +31,4 @@ class CargoRepository:
             finally:
                 conn.close()
 
-repo = CargoRepository()
+repoCar = CargoRepository()

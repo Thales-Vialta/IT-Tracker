@@ -29,6 +29,20 @@ class HorarioRepository:
             cursor.close()
             conn.close()
 
+    def Editar_Horario_Por_Id(self, id_horario, novo_inicio, novo_fim):
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor(buffered=True)
+            cursor.execute("""
+                UPDATE HorarioFunc
+                SET HoraInicio = %s, HoraFim = %s
+                WHERE idHorario = %s
+            """, (novo_inicio, novo_fim, id_horario))
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
+
     def buscar_Horario(self,Descricao):
         conn = DatabaseConnector().get_connection()
         try: 
@@ -63,7 +77,7 @@ class HorarioRepository:
     def Mostrar_Horario(self):
         conn = DatabaseConnector().get_connection()
         try:
-            cursor = conn.cursor()     
+            cursor = conn.cursor(buffered=True)     
             cursor.execute("""
                         SELECT HoraInicio, HoraFim, Descricao FROM HorarioFunc
                     """)
@@ -91,20 +105,17 @@ class HorarioRepository:
     def descobrirIdPorDescricao(self, Descricao: str):
         conn = DatabaseConnector().get_connection()
         try: 
-            cursor = conn.cursor()
+            cursor = conn.cursor(buffered=True)
             
-            # 1. Buscamos apenas a coluna do ID filtrando pela descrição exata
-            # Nota: mude 'idHorario' para o nome real da sua coluna de ID se for diferente
             query = "SELECT idHorario FROM HorarioFunc WHERE Descricao = %s"
             
             cursor.execute(query, (Descricao,))
             resultado = cursor.fetchone()
             
-            # 2. Se o banco encontrou o registro, extrai o ID de dentro da tupla
             if resultado:
-                return resultado[0] # Retorna o int puro (ex: 3)
+                return resultado[0] 
                 
-            return None # Retorna None se não achar nenhuma linha com essa descrição
+            return None 
 
         except Exception as e:
             print(f"Erro ao descobrir ID do horário: {e}")
@@ -112,5 +123,6 @@ class HorarioRepository:
         finally:
             cursor.close()
             conn.close()
+
 horarioRepo = HorarioRepository()
 

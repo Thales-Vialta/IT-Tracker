@@ -1,5 +1,5 @@
 from repositories.horarioRepository import horarioRepo
-from datetime import date, time
+from datetime import datetime
 from views.limparTela import limpar_tela
 from views.cores import CORES
 
@@ -42,11 +42,11 @@ class horarioService:
             HoraFim = linha[2]
             Descricao = linha[3]
 
-        inicio_str = str(HoraInicio).zfill(8)[:5]
-        fim_str = str(HoraFim).zfill(8)[:5]
+            inicio_str = str(HoraInicio).zfill(8)[:5]
+            fim_str = str(HoraFim).zfill(8)[:5]
            
             
-        return Descricao, inicio_str, fim_str
+            return Descricao, inicio_str, fim_str
     
     def buscarHorario(self,valor):
         horario = self.horario_repo.buscar_Horario(valor)
@@ -58,12 +58,20 @@ class horarioService:
         horario_tratado = self.tratarHorario(horario_funcionamento)
 
         _, func_inicio, func_fim = horario_tratado
-        print(func_inicio)
-        print(inicio)
-        print(func_fim)
-        print(fim)
+        try:
+            formato = "%H:%M"
+        
+            limite_inicios = datetime.strptime(func_inicio, formato).time()
+            limite_fim = datetime.strptime(func_fim, formato).time()
+        
+            usuario_inicio = datetime.strptime(inicio, formato).time()
+            usuario_fim = datetime.strptime(fim, formato).time()
+        
+        except ValueError:
+            return False
+        
 
-        if inicio > func_inicio and fim < func_fim:
+        if usuario_inicio >= limite_inicios and usuario_fim <= limite_fim:
             return True
         else:
             return False
@@ -84,14 +92,20 @@ class horarioService:
             return 'O sistema quebrou, pois isso não deveria ser possivel'
         
     def criarIntervalo(self, desc, inicio, fim):
-        if inicio >= fim:
+        try:
+            formato = "%H:%M"
+            obj_inicio = datetime.strptime(inicio, formato).time()
+            obj_fim = datetime.strptime(fim, formato).time()
+        except ValueError:
+            return f"{CORES['VERMELHO']}Erro: Formato de hora inválido! Use HH:MM.{CORES['RESET']}"
+        
+        if obj_inicio >= obj_fim:
             return f"{CORES['VERMELHO']}Erro: O horário de início não pode ser maior ou igual ao término.{CORES['RESET']}"
+        
+        if desc != 'Horario de Funcionamento':
+            if not self.intervaloValido(inicio, fim):
+                return f"{CORES['VERMELHO']}Erro: O horário solicitado está fora do limite de funcionamento da empresa.{CORES['RESET']}"
 
-        # 2. Primeira Validação: O horário está dentro do expediente da empresa?
-        if not self.intervaloValido(inicio, fim):
-            return f"{CORES['VERMELHO']}Erro: O horário solicitado está fora do limite de funcionamento da empresa.{CORES['RESET']}"
-
-        # 3. Segunda Validação: Esse intervalo específico já existe no banco?
         status_confronto = self.intervaloExiste(inicio, fim)
         
         if status_confronto == "Continue":
@@ -100,30 +114,47 @@ class horarioService:
         if status_confronto == 'O sistema quebrou, pois isso não deveria ser possivel':
             return f"{CORES['VERMELHO']}Erro Crítico: Duplicidade inconsistente encontrada no banco de dados.{CORES['RESET']}"
 
-        # 4. Se passou por tudo, realiza a inserção
         try:
-            # Substitua 'salvar_Horario' pelo nome exato do seu método de inserção no repositório
             self.horario_repo.Cadastrar_Horario(desc, inicio, fim) 
-            return f"{CORES['VERDE']}Intervalo '{desc}' ({inicio} - {fim}) criado com sucesso!{CORES['RESET']}"
+            return f"{CORES['NEGRITO']}Intervalo ({inicio} - {fim}){CORES['RESET']} {CORES['VERDE']}criado com sucesso!{CORES['RESET']}"
         except Exception as e:
             return f"{CORES['VERMELHO']}Erro ao salvar o horário no banco de dados: {e}{CORES['RESET']}"        
     
     def editarIntervalo(self, id_horario, nova_desc, novo_inicio, novo_fim):
         """Edita um intervalo existente no banco validando as regras de negócio."""
         
-        if novo_inicio >= novo_fim:
+        try:
+            formato = "%H:%M"
+            obj_inicio = datetime.strptime(novo_inicio, formato).time()
+            obj_fim = datetime.strptime(novo_fim, formato).time()
+        except ValueError:
+            return f"{CORES['VERMELHO']}Erro: Formato de hora inválido! Use HH:MM.{CORES['RESET']}"
+
+        if obj_inicio >= obj_fim:
             return f"{CORES['VERMELHO']}Erro: O horário de início não pode ser maior ou igual ao término.{CORES['RESET']}"
 
-        if not self.intervaloValido(novo_inicio, novo_fim):
-            return f"{CORES['VERMELHO']}Erro: Os novos horários estão fora do limite de funcionamento da empresa.{CORES['RESET']}"
+        if nova_desc != 'Horario de Funcionamento':
+            if not self.intervaloValido(novo_inicio, novo_fim):
+                return f"{CORES['VERMELHO']}Erro: Os novos horários estão fora do limite de funcionamento da empresa.{CORES['RESET']}"
 
-        status_confronto = self.intervaloExiste(novo_inicio, novo_fim)
-        if status_confronto == 'O sistema quebrou, pois isso não deveria ser possivel':
-            return f"{CORES['VERMELHO']}Erro Crítico: Inconsistência gravíssima detectada no banco.{CORES['RESET']}"
+        horarios_banco = self.horario_repo.Mostrar_Horario()
+        horario_atual = None
+        for inicio, fim, desc in horarios_banco:
+            if desc == nova_desc and self.horario_repo.descobrirIdPorDescricao(desc) == id_horario:
+                horario_atual = (str(inicio)[:5], str(fim)[:5])
+                break
+
+        if horario_atual != (novo_inicio, novo_fim):
+            status_confronto = self.intervaloExiste(novo_inicio, novo_fim)
+            if status_confronto == "Continue":
+                return f"{CORES['AMARELO']}Aviso: Esse intervalo de horário já está cadastrado no sistema para outro registro.{CORES['RESET']}"
+            if status_confronto == 'O sistema quebrou, pois isso não deveria ser possivel':
+                return f"{CORES['VERMELHO']}Erro Crítico: Inconsistência gravíssima detectada no banco.{CORES['RESET']}"
 
         try:
-            self.horario_repo.Editar_Horario(id_horario, nova_desc, novo_inicio, novo_fim)
-            return f"{CORES['VERDE']}Intervalo ID {id_horario} atualizado com sucesso para '{nova_desc}' ({novo_inicio} - {novo_fim})!{CORES['RESET']}"
+            self.horario_repo.Editar_Horario_Por_Id(id_horario, novo_inicio, novo_fim)
+            
+            return f"{CORES['VERDE']}Horário atualizado com sucesso para{CORES['RESET']} {novo_inicio} - {novo_fim}!"
         except Exception as e:
             return f"{CORES['VERMELHO']}Erro ao atualizar o horário no banco de dados: {e}{CORES['RESET']}"
 
@@ -141,7 +172,7 @@ class horarioService:
                 if linhas_afetadas == 0:
                     return f"{CORES['AMARELO']}Aviso: Nenhum intervalo foi encontrado com o ID {id}.{CORES['RESET']}"
                     
-                return f"{CORES['VERDE']}Intervalo ID {id} removido com sucesso do sistema!{CORES['RESET']}"
+                return f"{CORES['VERDE']}Intervalo removido com sucesso do sistema!{CORES['RESET']}"
                 
             except Exception as e:
                 return f"{CORES['VERMELHO']}Erro ao remover o horário do banco de dados: {e}{CORES['RESET']}"

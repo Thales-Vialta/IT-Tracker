@@ -107,7 +107,52 @@ class AparelhoRepository:
             cursor.close()
             conn.close()
 
+    def Listar_Aparelhos_Disponiveis(self, marca=None):
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            
+            # 1. Se a marca foi informada, tenta buscar os disponíveis dela primeiro
+            if marca and marca.strip():
+                query_marca = """
+                    SELECT 
+                        a.id_Aparelho, 
+                        a.patrimonio, 
+                        m.Marca, 
+                        m.Modelo
+                    FROM Aparelho a
+                    JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+                    WHERE m.Marca = %s 
+                    AND a.idStatus = 1;
+                """
+                cursor.execute(query_marca, (marca,))
+                resultado = cursor.fetchall()
+                
+                # Se encontrou aparelhos disponíveis dessa marca, retorna a lista
+                if resultado:
+                    return resultado
+            
+            # 2. CONTINGÊNCIA: Se a marca for vazia OU se não houver nenhum disponível dela
+            query_geral = """
+                SELECT 
+                    a.id_Aparelho, 
+                    a.patrimonio, 
+                    m.Marca, 
+                    m.Modelo
+                FROM Aparelho a
+                JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+                WHERE a.idStatus = 1;
+            """
+            cursor.execute(query_geral)
+            return cursor.fetchall()
 
-repo = AparelhoRepository()
-for serial in repo.Aparelho_mais_utilizado():
-    print(f"{serial}")
+        except Exception as e:
+            print(f"Erro ao listar aparelhos disponíveis: {e}")
+            return []
+            
+        finally:
+            cursor.close()
+            conn.close()
+
+repoAp = AparelhoRepository()
+

@@ -1,6 +1,6 @@
 from views.limparTela import limpar_tela
 from views.cores import CORES
-from repositories.aparelhosRepository import repo
+from repositories.aparelhosRepository import repoAp
 
 class AparelhoService:
 
@@ -25,27 +25,27 @@ class AparelhoService:
         limpar_tela()
         aparelhos = self.aparelho_repo.Listar_Todos_Aparelhos()
 
-        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}+========= lista de Aparelhos =========+{CORES['RESET']}"
+        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- DISPOSITIVOS CADASTRADOS ----\n\n{CORES['RESET']}"
 
         if not aparelhos:
             return resultado + "Nenhum aparelho cadastrado.\n"
 
-        for numero, aparelho in enumerate(1,aparelhos):
+        for numero, aparelho in enumerate(aparelhos, start=1):
             id_aparelho = aparelho[0]
             patrimonio = aparelho[1]
             marca = aparelho[2]
             modelo = aparelho[3]
 
-        num_format = f"{numero}.".ljust(4)
-        patrimonio_format = patrimonio.ljust(20)
-        descricao_format = f"{marca} {modelo}".ljust(30)
+            num_format = f"{numero}.".ljust(4)
+            patrimonio_format = patrimonio.ljust(20)
+            descricao_format = f"{marca} {modelo}".ljust(25)
 
-        resultado += (
-                f"{CORES['AMARELO']}{CORES['NEGRITO']}{num_format}{CORES['RESET']} "
-                f"ID: {str(id_aparelho).ljust(4)} | "
-                f"Patrimônio: {patrimonio_format} | "
-                f"Aparelho: {descricao_format}\n"
-            )
+            resultado += (
+                    f"{CORES['AMARELO']}{CORES['NEGRITO']}{num_format}{CORES['RESET']} "
+                    f"ID: {str(id_aparelho).ljust(4)} | "
+                    f"Aparelho: {descricao_format} | "
+                    f"Patrimônio: {patrimonio_format}\n"                    
+                )
             
         return resultado
 
@@ -87,4 +87,22 @@ class AparelhoService:
 
         return "Erro: Não foi possível remover o aparelho. Certifique-se de que ele não possui alocações vinculadas."
 
-aparelhoService = AparelhoService(repo)
+    def mostra_aparelhos_disponiveis(self, marca=None):
+        aparelhosDisp = self.aparelho_repo.Listar_Aparelhos_Disponiveis(marca)
+        listaDisp = ''
+        for id_ap, patrimonio, marca, modelo in aparelhosDisp:
+            listaDisp = f"ID: {id_ap} | Pat: {patrimonio} | {marca} - {modelo}"
+        return listaDisp
+    
+    def validaId_Disponivel(self, marca, id):
+        aparelhosDisp = self.aparelho_repo.Listar_Aparelhos_Disponiveis()
+        lista_IDs = []
+        for id_ap in aparelhosDisp:
+            lista_IDs.append(id_ap)
+
+        if id not in lista_IDs:  
+            return False   
+        else:
+            return True
+        
+aparelhoService = AparelhoService(repoAp)
