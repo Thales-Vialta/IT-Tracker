@@ -9,7 +9,8 @@ class StatusRepository:
             cursor.execute("""
                         SELECT * FROM StatusAparelho
                     """)
-            conn.commit()
+            resultado = cursor.fetchall()
+            return resultado
         finally:
             cursor.close()
             conn.close()
@@ -21,7 +22,8 @@ class StatusRepository:
             cursor = conn.cursor()
 
             cursor.execute("""UPDATE Aparelho SET idStatus = %s WHERE id_Aparelho = %s """, (idStatus, idAparelho))
-            conn.commit()
+            resultado = cursor.fetchall()
+            return resultado
         finally:
             cursor.close()
             conn.close()

@@ -43,7 +43,9 @@ class ManutencaoRepository:
             WHERE id_Aparelho = %s AND idStatus = 3""",
                 (id_aparelho,),
             )
+            
             conn.commit()
+            return True
         except ValueError:
             print("Erro! Nome vazio")
         except Exception as e:
@@ -51,3 +53,5 @@ class ManutencaoRepository:
         finally:
             cursor.close()
             conn.close()
+
+ManutencaoRepo = ManutencaoRepository()

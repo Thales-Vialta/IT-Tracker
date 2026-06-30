@@ -59,6 +59,24 @@ class ModeloService:
             print(f"Erro no serviço ao remover modelo: {e}")
             return " Erro interno ao processar a remoção!"
     
+    def editarModelo(self, modelo_antigo: str, atributo: str, valor: str):
+
+            modelo_encontrado = self.buscarModelo(modelo_antigo)
+            print(modelo_encontrado)
+            
+            if not modelo_encontrado:
+                return "Modelo não encontrado!"
+            
+            id_modeloTratado = modelo_encontrado[0][0]
+
+            try:
+                # CORREÇÃO: Colocado na ordem correta que o repositório espera (id, atributo, valor)
+                self.modeloReposit.Editar_Modelo(id_modeloTratado, atributo, valor)
+                return "Modelo updated!"
+                
+            except Exception as e:
+                print(f"Erro no serviço ao editar modelo: {e}")
+                return "Erro interno ao processar a edição!"
 
     
 

@@ -1,9 +1,9 @@
-from repositories.ManutencaoRepository import ManutencaoRepository
+from repositories.ManutencaoRepository import ManutencaoRepo
 
 class ManutencaoService:
     
-    def __init__(self):
-        self.repository = ManutencaoRepository()
+    def __init__(self, ManutencaoRepo):
+        self.repository = ManutencaoRepo
 
     def obter_aparelhos_defeituosos(self):
 
@@ -28,3 +28,6 @@ class ManutencaoService:
             raise Exception(f"Não foi possível liberar o aparelho {id_aparelho}. Verifique se ele já foi liberado.")
             
         return "Aparelho liberado com sucesso e pronto para uso!"
+    
+
+manutencaoServe = ManutencaoService(ManutencaoRepo)

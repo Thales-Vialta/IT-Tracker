@@ -71,15 +71,17 @@ class ModeloRepository:
             cursor.close()
             conn.close()
     
-    def Editar_Modelo(self,Marca:str,Modelo_do_Aparelho:str,idModelo:int):
+    def Editar_Modelo(self, id, atributo, valor):
             conn = DatabaseConnector().get_connection()
             try: 
                 cursor = conn.cursor()
-                cursor.execute("""UPDATE Modelo_Aparelho 
-                               SET Marca = %s, Modelo = %s 
-                               WHERE idModelo = %s""",(Marca,Modelo_do_Aparelho,idModelo))
-                resultado = cursor.fetchall()
-                return resultado 
+                
+                # CORREÇÃO: Removida a palavra 'valor' intruza e ajustada a query SQL
+                query = f"UPDATE Modelo_Aparelho SET {atributo} = %s WHERE idModelo = %s"
+                
+                cursor.execute(query, (valor, id))
+                conn.commit()
+                
             finally: 
                 cursor.close()
                 conn.close()

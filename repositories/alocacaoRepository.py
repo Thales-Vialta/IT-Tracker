@@ -75,7 +75,9 @@ class AlocacaoRepository:
             cursor.close()
             conn.close()
 
-    def Listar_Alocacao(self, idAlocacao: int):
+
+
+    def Buscar_Alocacao(self, idAlocacao: int):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
@@ -137,3 +139,36 @@ class AlocacaoRepository:
         finally:
             cursor.close()
             conn.close()
+    def Listar_Alocacao_Gap_Data(self, data_inicio, data_fim):
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+            """
+            SELECT
+                al.idAlocacao,
+                u.Nome_Usuario,
+                a.Patrimonio,
+                m.Marca,
+                m.Modelo,
+                sa.NomeSala,
+                al.DataAlocacao,
+                al.DataDevolucao
+            FROM Alocacao al
+            JOIN Usuario u ON al.idUsuario = u.idUsuario
+            JOIN Aparelho a ON al.id_Aparelho = a.id_Aparelho
+            JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+            JOIN Sala sa ON sa.idSala = al.idSala
+            WHERE al.DataAlocacao = %s AND al.Datadevolucao = %s; """,
+            (data_inicio, data_fim)
+        )
+            return cursor.fetchall()
+
+        except Exception as e:
+            print(f"Erro ao listar alocações: {e}")
+
+        finally:
+            cursor.close()
+            conn.close()
+
+repoAlocacao = AlocacaoRepository()

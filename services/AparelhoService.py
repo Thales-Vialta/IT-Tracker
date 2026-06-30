@@ -55,7 +55,7 @@ class AparelhoService:
             print("Aparelho não encontrado!")
         return aparelho
 
-    def exibir_aparelho_mais_utilizado(self) -> str:
+    def exibir_aparelho_mais_utilizado(self):
         dados = self.aparelho_repo.aparelho_mais_utilizado()
         if not dados:
             return f"{CORES['VERMELHO']}Nenhum dado de alocação encontrado.{CORES['RESET']}"
@@ -76,7 +76,7 @@ class AparelhoService:
             return "Aparelho atualizado com sucesso!"
         return "Erro técnico ao tentar atualizar o aparelho."
 
-    def remover_aparelho(self, id_aparelho: int) -> str:
+    def remover_aparelho(self, id_aparelho: int):
         aparelho = self.aparelho_repo.buscar_aparelho(id_aparelho)
         if not aparelho:
             return "Erro: Aparelho não encontrado!"

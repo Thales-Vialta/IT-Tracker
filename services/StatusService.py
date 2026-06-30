@@ -21,3 +21,8 @@ class StatusService:
             return "Não há aparelhos em manutenção."
 
         return aparelhos
+    
+    def listar_status(self):
+        return self.status_repo.Listar_Aparelhos_Status()
+    
+statusServ = StatusService(repo)
