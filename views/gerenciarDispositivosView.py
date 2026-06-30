@@ -29,7 +29,7 @@ class gerenciarDispositivosView:
             ).ask()
 
             if opcao == "Gerenciar Modelos":
-                gerenciarModelosView.gerenciar_modelos()
+                gerenciarModelosView().gerenciar_modelos()
             elif opcao == "Ver Dispositivos Cadastrados":
                 print(aparelhoService.listar_aparelhos())    
                 input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")

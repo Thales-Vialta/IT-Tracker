@@ -95,16 +95,16 @@ class ManutencaoView:
 
                 id_alvo = mapa_ids[escolha]
 
-                confirmar = questionary.confirm(
+                confirmar = questionary.select(
                     f"Confirmar que o aparelho ID {id_alvo} foi consertado e está pronto para uso?",
-                    default=True,
+                    instruction=" ",
                     qmark=" ",
-                    style=minhas_cores
+                    style=minhas_cores,
+                    choices=["Sim", "Não"]
                 ).ask()
 
-                if confirmar:
+                if confirmar == "Sim":
                     limpar_tela()
-                    print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- PROCESSANDO LIBERAÇÃO ---\n{CORES['RESET']}")
                     
                     try:
                         resultado = manutencaoServe.liberar_aparelho_da_manutencao(id_alvo)

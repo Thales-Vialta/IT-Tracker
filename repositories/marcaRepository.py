@@ -56,17 +56,20 @@ class MarcaRepository:
             conn.close()
 
 
-    def editar_Marca(self, idMarca, novaMarca):
+    def Editar_Marca(self, idMarca, atributo, valor):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
 
-            cursor.execute("""
-                UPDATE Marca
-                SET Marca = %s
-                WHERE idMarca = %s
-            """, (novaMarca, idMarca))
+            coluna = "Marca" if atributo == "NomeMarca" else atributo
 
+            query = f"""
+                UPDATE Marca
+                SET {coluna} = %s
+                WHERE idMarca = %s
+            """
+
+            cursor.execute(query, (valor, idMarca))
             conn.commit()
 
         finally:
@@ -85,6 +88,13 @@ class MarcaRepository:
             """, (idMarca,))
 
             conn.commit()
+            return True
+        
+        except Exception as e:
+            if "a foreign key constraint fails" in str(e).lower() or "1451" in str(e):
+                return "vinculado"
+            print(f"Erro ao remover marca no repositório: {e}")
+            return False
 
         finally:
             cursor.close()

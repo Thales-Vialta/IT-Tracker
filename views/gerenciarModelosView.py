@@ -3,6 +3,11 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from views.gerenciarMarcaView import gerenciarMarcaView
+from views.editarModeloView import editarModelosView
+
+from services.modeloService import modeloServ
+
 class gerenciarModelosView:
 
     def gerenciar_modelos(self):
@@ -16,6 +21,7 @@ class gerenciarModelosView:
                 qmark=" ",
                 style=minhas_cores,
                 choices=[
+                    "Gerenciar Marca dos Modelos",
                     "Ver Modelos Cadastrados",
                     "Criar Novo Modelo",
                     "Editar Modelos",
@@ -24,15 +30,16 @@ class gerenciarModelosView:
                 ]
             ).ask()
 
-            if opcao == "Ver Modelos Cadastrados":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+            if opcao == "Gerenciar Marca dos Modelos":
+                gerenciarMarcaView().gerenciar_marca()
+            elif opcao == "Ver Modelos Cadastrados":
+                print(modeloServ.listarModelos())
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Modelo":
                 print(" Gerenciar reservas em desenvolvimento")
                 input("enter")    
             elif opcao == "Editar Modelos":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
+               editarModelosView().editar_modelo()
             elif opcao == "Ver Modelos Cadastrados": 
                 print("Gerenciar aparelhos em desenvolvimento")
                 input("enter")

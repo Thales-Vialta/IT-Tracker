@@ -53,21 +53,16 @@ class AlocacaoRepository:
             cursor.execute(
                 """
             SELECT
-                al.idAlocacao,
-                u.Nome_Usuario,
-                a.Patrimonio,
-                m.Marca,
-                m.Modelo,
-                sa.NomeSala,
-                al.DataAlocacao,
-                al.DataDevolucao
+            u.Nome_Usuario,
+            GROUP_CONCAT(a.Patrimonio ORDER BY a.Patrimonio SEPARATOR ', ') AS Patrimonios,
+            al.DataAlocacao,
+            al.DataDevolucao,
+            sa.NomeSala
             FROM Alocacao al
             JOIN Usuario u ON al.idUsuario = u.idUsuario
             JOIN Aparelho a ON al.id_Aparelho = a.id_Aparelho
-            JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
-            JOIN Sala sa ON sa.idSala = al.idSala;
-        """
-            )
+            JOIN Sala sa ON sa.idSala = al.idSala
+            ORDER BY u.idUsuario, al.DataAlocacao, al.DataDevolucao, al.idAlocacao;;""")
             return cursor.fetchall()
         except Exception as e:
             print(f"Erro ao inserir usuário: {e}")
@@ -92,32 +87,15 @@ class AlocacaoRepository:
             cursor.close()
             conn.close()
 
-    def Editar_Alocacao(
-        self,
-        idUsuario: int,
-        id_Aparelho: int,
-        idSala: int,
-        DataAlocacao: str,
-        DataDevolucao: str,
-        idAlocacao: int,
-    ):
+    def Editar_Alocacao( self,atributo: str, valor: str,idAlocacao: int):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute(
-                """
-                UPDATE Alocacao 
-                SET idUsuario = %s, id_Aparelho = %s, idSala = %s, DataAlocacao = %s, DataDevolucao = %s 
+            cursor.execute(f"""
+                UPDATE Alocacao SET {atributo} = %s
                 WHERE idAlocacao = %s
             """,
-                (
-                    idUsuario,
-                    id_Aparelho,
-                    idSala,
-                    DataAlocacao,
-                    DataDevolucao,
-                    idAlocacao,
-                ),
+                (valor,idAlocacao),
             )
             conn.commit()
         finally:

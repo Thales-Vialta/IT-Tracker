@@ -1,11 +1,12 @@
 from repositories.alocacaoRepository import repoAlocacao
 from services.userService import userService
 from services.salaService import salaService
+
 class AlocacacaoService: 
-    def __init__(self, repoAlocacao, userService, salaService):
+    def __init__(self, repoAlocacao, salaService, userService):
         self.repoAloc = repoAlocacao
-        self.userServ = userService
         self.salaServ = salaService
+        self.userServ = userService
 
     def cadastrarAlocacao(self,data_hora_inicio, data_hora_fim, qtd_ap, listIDs_aparelho:list, user, sala):
 
@@ -13,9 +14,9 @@ class AlocacacaoService:
         salaFinal = sala.buscabuscarSalas(sala)
 
         for i in range(qtd_ap-1):
-            self.repoAloc.inserir_Alocacao(usuario,listIDs_aparelho[i],usuario,salaFinal)
+            self.repoAloc.inserir_Alocacao(usuario,listIDs_aparelho[i],salaFinal,data_hora_inicio,data_hora_fim)
         
-        pass
+   
 
     def listarAlocacao(self):
         alocacoes = self.repoAloc.Listar_Alocacao()
@@ -24,31 +25,52 @@ class AlocacacaoService:
 
         for registro in alocacoes:
             # Desempacota cada coluna na ordem exata do seu SELECT
-            id_alocacao, usuario, patrimonio, marca, modelo, sala, dt_alocacao, dt_devolucao = registro
+            _, usuario, patrimonio, marca, modelo, sala, dt_alocacao, dt_devolucao = registro
             
             # Formata uma linha única e organizada para cada registro
-            print(f"Alocação #{id_alocacao} | {usuario} | Sala: {sala}")
+            print(f"Alocação #{usuario} | Sala: {sala}")
             print(f"  └─ Disp: [{patrimonio}] {marca} {modelo}")
             print(f"  └─ Período: {dt_alocacao} até {dt_devolucao}")
-            print("-" * 70) # Linha separadora discreta entre uma alocação e outra
+            print("-" * 70) 
 
         print("======================================================================")
 
         pass
 
-    def buscarAlocacao(self, id):
+    def buscarAlocacao(self, usuario):
         validacao = self.repoAloc.Buscar_Alocacao(id)
+        texto_retorno = f"=================== RESULTADO DA BUSCA (ID: {id}) ===================\n"
+
         if not validacao:
-            return "ID inválido!"
-        
+            texto_retorno = "Nenhuma alocação encontrada com este ID.\n"
         else:
-            return
+            for alocacao in validacao:
+                id_alocacao, id_aparelho, id_usuario, id_sala, data_alocacao, data_devolucao = alocacao
+                
+                texto_retorno += f"Alocação: {usuario}\n"
+                texto_retorno += f"  ├─ ID do Usuário:  {id_usuario}\n"
+                texto_retorno += f"  ├─ ID do Aparelho: {id_aparelho}\n"
+                texto_retorno += f"  ├─ ID da Sala:     {id_sala}\n"
+                texto_retorno += f"  ├─ Data Início:    {data_alocacao}\n"
+                texto_retorno += f"  └─ Data Devolução: {data_devolucao}\n"
+                texto_retorno += "-" * 60 + "\n"
 
-    def editarAlocacao(self):
-        pass
+            texto_retorno += "===================================================================="
+            
+            return texto_retorno
 
-    def removerAlocacao(self):
-        pass
+    def editarAlocacao(self,id,atributo,valor,qtd=None):
+
+        if atributo == "Aparelho":
+            for i in range(qtd-1):
+                self.repoAloc.Editar_Alocacao(id,atributo,valor[i])
+        else:
+            self.repoAloc.Editar_Alocacao(id,atributo,valor)
+          
+
+    def removerAlocacao(self,slaOQvaiPassar):
+        self.repoAloc.Deletar_Alocacao(slaOQvaiPassar)
+
 
 
         

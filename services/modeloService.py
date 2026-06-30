@@ -1,3 +1,6 @@
+from views.cores import CORES
+from views.limparTela import limpar_tela
+
 from repositories.modeloRepository import modeloRepo
 
 class ModeloService:
@@ -13,20 +16,39 @@ class ModeloService:
             # Se encontrar algo, o modelo já existe no sistema
             return False
         
-    def cadastrarModelo(self, marca, modelo):
+    def cadastrarModelo(self, idmarca, modelo):
         validacao = self.validarModelo(modelo)
 
         if not validacao:
             return " já cadastrado!"
         else:
-            self.modeloReposit.inserir_Modelo(marca, modelo)
+            self.modeloReposit.inserir_Modelo(idmarca, modelo)
 
             return " cadastrado com sucesso!"
         
     def listarModelos(self):
         listaModelos = self.modeloReposit.listar_Modelos()
 
-        return listaModelos
+        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- MODELOS CADASTRADOS ----\n\n{CORES['RESET']}"
+
+        if not listaModelos:
+            return resultado + "Nenhum modelo cadastrado.\n"
+
+        for numero, modelo_item in enumerate(listaModelos, start=1):
+            id_modelo = modelo_item[0]
+            marca = modelo_item[1]
+            nome_modelo = modelo_item[2]
+
+            num_format = f"{numero}.".ljust(4)
+            descricao_format = f"{marca} {nome_modelo}".ljust(18)
+
+            resultado += (
+                f"{CORES['AMARELO']}{CORES['NEGRITO']}{num_format}{CORES['RESET']} "
+                f"{descricao_format} | "
+                f"Marca: {str(id_modelo).ljust(4)}\n"
+            )
+            
+        return resultado
     
     def buscarModelo(self, modelo):
         modeloBuscado = self.modeloReposit.buscar_Modelo(modelo)
