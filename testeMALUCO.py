@@ -1,5 +1,0 @@
-from services.horarioService import horarioService
-from services.alocacaoService import AlocacacaoService
-from repositories.alocacaoRepository import repoAlocacao
-from services.salaService import salaService
-from services.userService import userService
