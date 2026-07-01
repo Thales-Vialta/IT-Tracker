@@ -1,80 +1,143 @@
 import questionary
+from views.cores import CORES, minhas_cores
 from views.limparTela import limpar_tela
-from views.cores import CORES
 
 from services.alocacaoService import alocacaoService
 from services.salaService import salaService
-from services.AparelhoService import aparelhoService
+
 
 class editarReservaView: 
 
     def editar_Reserva(self):
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- EDITAR RESERVA ---\n{CORES['RESET']}")
-        id_alocacao = questionary.text("Digite o ID da Reserva que queira editar: ", validate=lambda text:text.isdigit()or "Por favor, insira um número válido.").ask()
 
-        if not id_alocacao: 
+        alocacoes_banco = alocacaoService.repoAloc.listar_alocacoes()
+
+        if not alocacoes_banco:
+            print(f"{CORES['VERMELHO']}Nenhuma reserva cadastrada no sistema!{CORES['RESET']}")
+            questionary.press_any_key_to_continue(
+                "Pressione qualquer tecla para voltar...",
+                style=minhas_cores
+            ).ask()
             return
-        id_alocacao = int(id_alocacao)
 
-        resumo = alocacaoService.buscarAlocacao(id_alocacao,"Atual")
+        opcoes_reservas = []
+        for registro in alocacoes_banco:
+            id_aloc, usuario, sala, dt_aloc, _, _, _ = registro
+            linha = f"ID: #{id_aloc} | Usuário: {usuario} | Sala: {sala} | Data: {dt_aloc}"
+            opcoes_reservas.append(linha)
+        
+        opcoes_reservas.append("Cancelar")
+
+        reserva_selecionada = questionary.select(
+            "Selecione qual reserva você deseja editar:",
+            choices=opcoes_reservas,
+            style=minhas_cores,
+            instruction=" ",
+            qmark=" "
+        ).ask()
+
+        if reserva_selecionada == "Cancelar" or not reserva_selecionada:
+            return
+
+        id_alocacao = int(reserva_selecionada.split("ID: #")[1].split(" |")[0])
+
         limpar_tela()
+        resumo = alocacaoService.buscarAlocacao(id_alocacao)
         print(resumo)
 
-        if "Nenhuma alocação encontrada" in resumo:
-            questionary.press_any_key_to_continue("Pressione qualquer tecla para voltar...").ask()
-            return
-        
-        opcao = questionary.select("O que quer alterar desta reserva?", 
+        opcao = questionary.select(
+            "O que quer alterar desta reserva?", 
             choices=[
-                "Data de Alocação (Início)",
-                "Data de Devolução (Fim)",
-                "ID da Sala",
-                "ID do Usuário",
+                "Nome do Usuário",
+                "Nome da Sala",
+                "Data/Hora de Início",
+                "Data/Hora de Fim",
                 "Sair / Cancelar"
-            ]).ask()
+            ],
+            style=minhas_cores,
+            instruction=" ",
+            qmark=" "
+        ).ask()
+
         if opcao == "Sair / Cancelar" or not opcao:
             print(f"\n{CORES['AMARELO']}Operação cancelada.{CORES['RESET']}\n")
             return
 
         mapa_atributos = {
-            "Data de Alocação (Início)": "DataAlocacao",
-            "Data de Devolução (Fim)": "DataDevolucao",
-            "ID da Sala": "idSala",
-            "ID do Usuário": "idUsuario"
+            "Nome do Usuário": "usuario",
+            "Nome da Sala": "sala",
+            "Data/Hora de Início": "inicio",
+            "Data/Hora de Fim": "fim"
         }
         
-        atributo_db = mapa_atributos[opcao]
+        atributo_service = mapa_atributos[opcao]
+        novo_valor = None
 
-        if "Data" in atributo_db:
-            novo_valor = questionary.text(
-                f"Digite a nova {opcao} (Formato: YYYY-MM-DD HH:MM:SS):"
-            ).ask()
-        else:
-            novo_valor = questionary.text(
-                f"Digite o novo {opcao}:",
-                validate=lambda text: text.isdigit() or "O ID deve ser um número inteiro."
-            ).ask()
-            if novo_valor:
-                novo_valor = int(novo_valor)
+        if atributo_service == "sala":
+            limpar_tela()
+            print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- SELECIONE A NOVA SALA ---\n{CORES['RESET']}")
+            salas_banco = salaService.sala_repo.listarSalas()
+            
+            if salas_banco:
+                opcoes_salas = [sala[0] for sala in salas_banco]
+                opcoes_salas.append("Cancelar")
+                
+                escolha_sala = questionary.select(
+                    "Selecione a nova sala:",
+                    choices=opcoes_salas,
+                    style=minhas_cores,
+                    instruction=" ",
+                    qmark=" "
+                ).ask()
+                
+                if escolha_sala != "Cancelar" and escolha_sala:
+                    novo_valor = escolha_sala
+            else:
+                print(f"{CORES['VERMELHO']}Nenhuma sala cadastrada no sistema para seleção.{CORES['RESET']}")
 
-        if not novo_valor:
-            print(f"\n{CORES['AMARELO']}Alteração vazia. Operação cancelada.{CORES['RESET']}\n")
+        elif atributo_service == "usuario":
+            limpar_tela()
+            print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- ALTERAR USUÁRIO RESPONSÁVEL ---\n{CORES['RESET']}")
+            novo_valor = questionary.text(
+                "Digite o nome do novo usuário:",
+                style=minhas_cores,
+                qmark=" "
+            ).ask()
+
+        elif "inicio" in atributo_service or "fim" in atributo_service:
+            limpar_tela()
+            print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- ALTERAR DATA E HORÁRIO ---\n{CORES['RESET']}")
+            novo_valor = questionary.text(
+                f"Digite o novo período para {opcao}\n(Formato: YYYY-MM-DD HH:MM:SS):",
+                style=minhas_cores,
+                qmark=" "
+            ).ask()
+
+        if not novo_valor or not str(novo_valor).strip():
+            print(f"\n{CORES['AMARELO']}Alteração vazia ou cancelada. Operação abortada.{CORES['RESET']}\n")
+            questionary.press_any_key_to_continue("Pressione qualquer tecla para voltar...", style=minhas_cores).ask()
             return
 
-        confirmar = questionary.confirm(
+        novo_valor = str(novo_valor).strip()
+
+        limpar_tela()
+        confirmar = questionary.select(
             f"Tem certeza que deseja alterar '{opcao}' para '{novo_valor}'?",
-            default=True
+            choices=["Sim", "Não"],
+            style=minhas_cores,
+            instruction=" ",
+            qmark=" "
         ).ask()
 
-        if confirmar:
+        if confirmar == "Sim":
             try:
-
-                alocacaoService.editarAlocacao(id_alocacao, atributo_db, novo_valor)
-                print(f"\n{CORES['VERDE']}✔ Reserva #{id_alocacao} atualizada com sucesso!{CORES['RESET']}\n")
+                resultado = alocacaoService.editarAlocacao(id_alocacao, atributo_service, novo_valor)
+                print(f"\n{CORES['VERDE']}✔ {resultado}{CORES['RESET']}\n")
             except Exception as e:
-                print(f"\n{CORES['VERMELHO']}❌ Erro ao atualizar reserva: {e}{CORES['RESET']}\n")
+                print(f"\n{CORES['VERMELHO']}Erro ao atualizar reserva: {e}{CORES['RESET']}\n")
         else:
             print(f"\n{CORES['AMARELO']}Alteração descartada.{CORES['RESET']}\n")
 
-        questionary.press_any_key_to_continue("Pressione qualquer tecla para continuar...").ask()
+        input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")

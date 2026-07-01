@@ -7,6 +7,7 @@ from views.gerenciarModelosView import gerenciarModelosView
 from views.criarNovoDispositivo import criarNovoDispositivoView 
 from views.editarDispositivosView import EditarDispositivosView
 from views.removerDispositivoView import removerDispositivosView
+from views.alterarStatusView import AlterarStatusView
 from services.AparelhoService import aparelhoService
 
 class gerenciarDispositivosView:
@@ -35,8 +36,7 @@ class gerenciarDispositivosView:
             if opcao == "Gerenciar Modelos":
                 gerenciarModelosView().gerenciar_modelos()
             elif opcao == "Mudar Status do Dispositivo":
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
+                AlterarStatusView().alterar_status_dispositivo()
             elif opcao == "Ver Dispositivos Cadastrados":
                 print(aparelhoService.listar_aparelhos())    
                 input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")

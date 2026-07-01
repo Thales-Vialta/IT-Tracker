@@ -16,7 +16,6 @@ class criarNovaReservaView:
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- CRIAR NOVA RESERVA ---\n{CORES['RESET']}")
 
-        # 1. ENTRADA DO USUÁRIO
         usuario_final = questionary.text(
             "Digite o nome do usuário que está reservando:",
             style=minhas_cores,
@@ -30,7 +29,6 @@ class criarNovaReservaView:
         
         usuario_final = usuario_final.strip()
 
-        # 2. SELEÇÃO DE SALA
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- SELECIONE A SALA ---\n{CORES['RESET']}")
         
@@ -58,7 +56,6 @@ class criarNovaReservaView:
         if sala_final == "Cancelar" or not sala_final:
             return
 
-        # 3. SELEÇÃO MULTIPLA DE APARELHOS
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- SELECIONE OS APARELHOS ---\n{CORES['RESET']}")
         
@@ -91,7 +88,6 @@ class criarNovaReservaView:
             input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
-        # 4. DATAS E HORÁRIOS
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- PERÍODO DA RESERVA ---\n{CORES['RESET']}")
         
@@ -137,16 +133,11 @@ class criarNovaReservaView:
 
         if not hora_fim_str: return
 
-        # ---------------------------------------------------------------------
-        # VALIDANDO HORÁRIOS DE FUNCIONAMENTO E INTERVALOS
-        # ---------------------------------------------------------------------
-        # 1. Validando se está dentro do Horário de Funcionamento Geral
         if not horarioService.intervaloValido(hora_inicio_str, hora_fim_str):
             print(f"\n{CORES['VERMELHO']}Erro: O horário solicitado está fora do limite de funcionamento da empresa!{CORES['RESET']}")
             input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             return
 
-        # 2. Validando se não colide com nenhum Intervalo/Pausa cadastrado
         formato = "%H:%M"
         reserva_inicio = datetime.datetime.strptime(hora_inicio_str, formato).time()
         reserva_fim = datetime.datetime.strptime(hora_fim_str, formato).time()
