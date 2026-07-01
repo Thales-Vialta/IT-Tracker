@@ -1,13 +1,26 @@
 class Aparelhos:
+    def __init__(self, serial: str, statusAparelho:int, idModelo: int):
 
-    def __init__(self,serial:str,statusAparelho: str,idModelo:str):
-        self.__idAparelho = None
-        self.__serial = serial
-        self.__statusAparelho = statusAparelho
-        self.__idModelo = idModelo
+        self._serial = serial
+        self._statusAparelho = 1
+        self._idModelo = idModelo
 
-    def __str__(self):
-        return f"Aparelho [ID: {self.__idAparelho} | Serial: {self.__serial} | Status: {self.__statusAparelho} | Modelo: {self.__idModelo}]"
+    @property
+    def serial(self) -> int:
+        return self._serial
 
-class Notebook(Aparelhos):
-    pass
+    @property
+    def statusAparelho(self) -> bool:
+        return self._statusAparelho
+
+    @property
+    def idModelo(self) -> int:
+        return self._idModelo
+
+    # --- FUNÇÃO DE EXIBIÇÃO COM NOME NORMAL ---
+
+    def mostra(self) -> str:
+        """Retorna os atributos do aparelho formatados em texto"""
+        status_texto = "Ativo" if self._statusAparelho else "Inativo"
+        return f"ID Aparelho: {self._idAparelho} | Serial: {self._serial} | Status: {status_texto} | ID Modelo: {self._idModelo}"
+    

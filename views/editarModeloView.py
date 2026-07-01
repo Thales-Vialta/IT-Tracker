@@ -2,7 +2,7 @@ import questionary
 from views.limparTela import limpar_tela
 from views.cores import CORES, minhas_cores
 
-from services.ModeloService import modeloServ
+from services.modeloService import modeloServ
 
 class editarModelosView:
 
@@ -19,7 +19,7 @@ class editarModelosView:
 
         opcoes_modelos = []
         for id_mod, marca, nome_modelo in modelos_banco:
-            linha_opcao = f"{marca} {nome_modelo} (ID: {id_mod})"
+            linha_opcao = f"{nome_modelo} (ID: {id_mod})"
             opcoes_modelos.append(linha_opcao)
 
         opcoes_modelos.append("Cancelar")
@@ -35,8 +35,15 @@ class editarModelosView:
         if modelo_selecionado == "Cancelar" or not modelo_selecionado:
             return
 
+        # CORREÇÃO DA STRING:
+        # Se a linha é: "Samsung Galaxy S23 (ID: 5)"
+        # modelo_antigo fica: "Samsung Galaxy S23"
         modelo_antigo = modelo_selecionado.split(" (ID:")[0]
-        modelo_puro_antigo = modelo_selecionado.split(" ")[1].split(" (ID:")[0]
+        
+        # Para pegar o modelo puro (tirando a marca), removemos a primeira palavra (marca) 
+        # baseando-se no tamanho dela, evitando que nomes compostos quebrem.
+        primeira_palavra = modelo_antigo.split(" ")[0]
+        modelo_puro_antigo = modelo_antigo[len(primeira_palavra):].strip()
 
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- NOVO NOME PARA: {modelo_antigo} ---\n{CORES['RESET']}")
@@ -60,11 +67,11 @@ class editarModelosView:
             return
 
         limpar_tela()
-        print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- ATUALIZANDO NO BANCO ---\n{CORES['RESET']}")
         
+        # Agora modelo_puro_antigo vai com o nome completo e exato para o Service encontrar no banco
         resultado = modeloServ.editarModelo(modelo_puro_antigo, "Modelo", modelo_tratado)
 
         limpar_tela()
-        print(f"\n{resultado}")
+        print(f"\n{CORES['VERDE']}{resultado}{CORES['RESET']}")
 
         input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")

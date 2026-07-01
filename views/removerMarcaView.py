@@ -8,7 +8,7 @@ class removerMarcaView:
 
     def remover_marca(self):
         limpar_tela()
-        print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- REMOVER MARCA EXISTENTE ---\n{CORES['RESET']}")
+        print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- REMOVER MARCA ---\n{CORES['RESET']}")
 
         marcas_banco = marcaServ.marcaReposit.listar_Marcas()
 

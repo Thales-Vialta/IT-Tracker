@@ -1,6 +1,7 @@
 from views.limparTela import limpar_tela
 from views.cores import CORES
 from repositories.aparelhosRepository import repoAp
+from models.aparelhos import Aparelhos
 
 class AparelhoService:
 
@@ -9,23 +10,29 @@ class AparelhoService:
 
     def aparelho_existe(self,idAparelho: int ):
         if not self.aparelho_repo.Buscar_Aparelho(idAparelho):
-            return True
+            return False    
         else:
-            return False
+            return True
 
     def cadastrar_aparelho(self, serial:str,idStatus:int,idModelo:int):
         if not serial.strip():
             return "Erro: O número de patrimônio/serial não pode ser vazio!"
         if self.aparelho_existe(serial):
             return f"Erro: Aparelho com patrimônio '{serial}' já cadastrado!"
-        self.aparelho_repo.inserir_aparelho(serial, idStatus, idModelo)
+        
+        novo_aparelho = Aparelhos(serial, idStatus,idModelo)
+        patrimonio = novo_aparelho.serial
+        status = novo_aparelho.statusAparelho
+        id = novo_aparelho.idModelo
+
+        self.aparelho_repo.inserir_aparelho(patrimonio, status, id)
         return "Aparelho cadastrado com sucesso!"
 
     def listar_aparelhos(self): 
         limpar_tela()
         aparelhos = self.aparelho_repo.Listar_Todos_Aparelhos()
 
-        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- DISPOSITIVOS CADASTRADOS ----\n\n{CORES['RESET']}"
+        resultado = f"{CORES['AZUL']}{CORES['NEGRITO']}---- TODOS DISPOSITIVOS CADASTRADOS ----\n\n{CORES['RESET']}"
 
         if not aparelhos:
             return resultado + "Nenhum aparelho cadastrado.\n"
@@ -38,19 +45,19 @@ class AparelhoService:
 
             num_format = f"{numero}.".ljust(4)
             patrimonio_format = patrimonio.ljust(20)
-            descricao_format = f"{marca} {modelo}".ljust(25)
+            descricao_format = f"{modelo} ({marca})".ljust(30)
 
             resultado += (
                     f"{CORES['AMARELO']}{CORES['NEGRITO']}{num_format}{CORES['RESET']} "
                     f"ID: {str(id_aparelho).ljust(4)} | "
-                    f"Aparelho: {descricao_format} | "
+                    f"Modelo: {descricao_format} | "
                     f"Patrimônio: {patrimonio_format}\n"                    
                 )
             
         return resultado
 
     def buscar_aparelho_por_id(self, id_aparelho: int):
-        aparelho = self.aparelho_repo.buscar_aparelho(id_aparelho)
+        aparelho = self.aparelho_repo.Buscar_Aparelho(id_aparelho)
         if not aparelho:
             print("Aparelho não encontrado!")
         return aparelho
@@ -62,22 +69,25 @@ class AparelhoService:
             
         patrimonio, marca, modelo = dados
         return (f"{CORES['VERDE']}{CORES['NEGRITO']} APARELHO MAIS UTILIZADO \nPatrimônio: {patrimonio} | Modelo: {marca} {modelo}{CORES['RESET']}\n")
-
-    def atualizar_aparelho(self, id_aparelho: int, novo_serial: str, novo_id_modelo: int) -> str:
-        aparelho_atual = self.aparelho_repo.buscar_aparelho(id_aparelho)
+    def serial_ja_cadastrado(self, serial: str) -> bool:
+       
+        return bool(self.aparelho_repo.Buscar_Por_Serial(serial))
+    def atualizar_aparelho(self, id_aparelho: int, novo_serial: str, novo_id_modelo: int):
+        aparelho_atual = self.aparelho_repo.Buscar_Aparelho(id_aparelho)
+        
         if not aparelho_atual:
             return "Erro: Aparelho não encontrado para atualização!"
+        serial_antigo = aparelho_atual[1] 
 
-        if aparelho_atual[1] != novo_serial and self.aparelho_existe(novo_serial):
+        if novo_serial != serial_antigo and self.serial_ja_cadastrado(novo_serial):
             return f"Erro: O patrimônio '{novo_serial}' já está em uso por outro aparelho!"
-
-        sucesso = self.aparelho_repo.editar_aparelho(id_aparelho, novo_serial, novo_id_modelo)
+        sucesso = self.aparelho_repo.Editar_Aparelho(novo_serial, novo_id_modelo, id_aparelho)
         if sucesso:
-            return "Aparelho atualizado com sucesso!"
+            return "Aparelho updated com sucesso!"
         return "Erro técnico ao tentar atualizar o aparelho."
-
+    
     def remover_aparelho(self, id_aparelho: int):
-        aparelho = self.aparelho_repo.buscar_aparelho(id_aparelho)
+        aparelho = self.aparelho_repo.Buscar_Aparelho(id_aparelho)
         if not aparelho:
             return "Erro: Aparelho não encontrado!"
 

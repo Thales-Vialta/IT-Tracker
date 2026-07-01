@@ -1,4 +1,5 @@
 from repositories.horarioRepository import horarioRepo
+from models.horario import HorarioFuncionamento
 from datetime import datetime
 from views.limparTela import limpar_tela
 from views.cores import CORES
@@ -115,6 +116,11 @@ class horarioService:
             return f"{CORES['VERMELHO']}Erro Crítico: Duplicidade inconsistente encontrada no banco de dados.{CORES['RESET']}"
 
         try:
+            novoIntervalo = HorarioFuncionamento(inicio, fim,desc)
+            inicio = novoIntervalo.horaAbertura
+            fim = novoIntervalo.horaFechamento
+            desc = novoIntervalo.descricao
+
             self.horario_repo.Cadastrar_Horario(desc, inicio, fim) 
             return f"{CORES['NEGRITO']}Intervalo ({inicio} - {fim}){CORES['RESET']} {CORES['VERDE']}criado com sucesso!{CORES['RESET']}"
         except Exception as e:

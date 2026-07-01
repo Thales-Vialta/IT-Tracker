@@ -2,181 +2,159 @@ from dbConnector.Database import DatabaseConnector
 
 
 class AlocacaoRepository:
+    def faz_connection(self):
+        return DatabaseConnector().get_connection()
 
-    def inserir_Alocacao(
-        self,
-        idUsuario: int,
-        id_Aparelho: int,
-        idSala: int,
-        DataAlocacao: str,
-        DataDevolucao: str,
-    ):
-        conn = DatabaseConnector().get_connection()
+    def inserir_alocacao(self, id_usuario: int,id_aparelhos: list[int],id_sala: int,  data_alocacao: str,  data_devolucao: str,):
+        conn = self.faz_connection()
+
         try:
             cursor = conn.cursor()
-            cursor.execute(
-                """
-                INSERT INTO Alocacao
-                (idUsuario, id_Aparelho, idSala, DataAlocacao, DataDevolucao)
-                VALUES (%s, %s, %s, %s, %s)
-            """,
-                (idUsuario, id_Aparelho, idSala, DataAlocacao, DataDevolucao),
-            )
+
+            cursor.execute("""INSERT INTO Alocacao
+                (idUsuario,idSala,DataAlocacao,DataDevolucao)
+                VALUES (%s,%s,%s,%s)""",(id_usuario,id_sala,data_alocacao,data_devolucao,),)
+            id_alocacao = cursor.lastrowid
+            cursor.executemany("""INSERT INTO Item_Alocacao(ID_Alocacao,ID_Aparelho)
+                VALUES (%s,%s)
+                """,
+                [(id_alocacao, aparelho) for aparelho in id_aparelhos],)
             conn.commit()
+            return id_alocacao
+        except Exception as e: 
+            return f"Erro! {e}"
         finally:
             cursor.close()
             conn.close()
-
-    def Aparelhos_menos_Alocados(self):
-        conn = DatabaseConnector().get_connection()
+    def listar_alocacoes(self):
+        conn = self.faz_connection()
         try:
             cursor = conn.cursor()
-
             cursor.execute(
                 """
-                SELECT id_Aparelho, COUNT(idAlocacao) as total_alocacoes
-                FROM Alocacao 
-                GROUP BY id_Aparelho
-                ORDER BY total_alocacoes ASC;
-            """
+                SELECT
+                    al.idAlocacao,
+                    u.Nome_Usuario,
+                    s.NomeSala,
+                    al.DataAlocacao,
+                    al.DataDevolucao,
+
+                    GROUP_CONCAT(
+                        a.Patrimonio
+                        ORDER BY a.Patrimonio
+                    ) AS Patrimonios,
+
+                    GROUP_CONCAT(
+                        CONCAT(m.Marca,' ',mo.Modelo)
+                        SEPARATOR ' | '
+                    ) AS Aparelhos
+
+                FROM Alocacao al
+
+                JOIN Usuario u
+                    ON al.idUsuario=u.idUsuario
+
+                JOIN Sala s
+                    ON al.idSala=s.idSala
+
+                JOIN Item_Alocacao ia
+                    ON al.idAlocacao=ia.ID_Alocacao
+
+                JOIN Aparelho a
+                    ON ia.ID_Aparelho=a.id_Aparelho
+
+                JOIN Modelo_Aparelho mo
+                    ON a.idModelo=mo.idModelo
+
+                JOIN Marca m
+                    ON mo.idMarca=m.idMarca
+
+                GROUP BY
+                    al.idAlocacao,
+                    u.Nome_Usuario,
+                    s.NomeSala,
+                    al.DataAlocacao,
+                    al.DataDevolucao
+
+                ORDER BY
+                    u.Nome_Usuario,
+                    al.DataAlocacao;
+                """
             )
-            resultado = cursor.fetchall()
-            return resultado
-        finally:
-            cursor.close()
-            conn.close()
 
-    def Listar_Alocacao(self):
-        conn = DatabaseConnector().get_connection()
-        try:
-            cursor = conn.cursor()
-            cursor.execute(
-                """
-            SELECT
-            u.Nome_Usuario,
-            GROUP_CONCAT(a.Patrimonio ORDER BY a.Patrimonio SEPARATOR ', ') AS Patrimonios,
-            al.DataAlocacao,
-            al.DataDevolucao,
-            sa.NomeSala
-            FROM Alocacao al
-            JOIN Usuario u ON al.idUsuario = u.idUsuario
-            JOIN Aparelho a ON al.id_Aparelho = a.id_Aparelho
-            JOIN Sala sa ON sa.idSala = al.idSala
-            ORDER BY u.idUsuario, al.DataAlocacao, al.DataDevolucao, al.idAlocacao;;""")
             return cursor.fetchall()
-        except Exception as e:
-            print(f"Erro ao inserir usuário: {e}")
+
         finally:
             cursor.close()
             conn.close()
 
-
-
-    def Buscar_Alocacao(self, idAlocacao: int):
-        conn = DatabaseConnector().get_connection()
+    def buscar_alocacao(self, id_alocacao):
+        conn = self.faz_connection()
         try:
             cursor = conn.cursor()
+
             cursor.execute(
-                """SELECT * FROM Alocacao WHERE idAlocacao LIKE %s""", (idAlocacao,)
+                """
+                SELECT
+
+                    al.idAlocacao,
+                    al.DataAlocacao,
+                    al.DataDevolucao,
+                    al.idSala,
+                    al.idUsuario,
+
+                    GROUP_CONCAT(ia.ID_Aparelho)
+
+                FROM Alocacao al
+
+                LEFT JOIN Item_Alocacao ia
+                    ON ia.ID_Alocacao=al.idAlocacao
+
+                WHERE al.idAlocacao=%s
+
+                GROUP BY al.idAlocacao
+                """,
+                (id_alocacao,),
             )
-            resultado = cursor.fetchall()
-            return resultado
-        except Exception as e:
-            print(f"Erro ao inserir usuário: {e}")
+
+            return cursor.fetchone()
+
         finally:
             cursor.close()
             conn.close()
 
-    def Editar_Alocacao( self,atributo: str, valor: str,idAlocacao: int):
-        conn = DatabaseConnector().get_connection()
+    def editar_alocacao(self, atributo, valor, id_alocacao):
+
+        conn = self.faz_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute(f"""
-                UPDATE Alocacao SET {atributo} = %s
-                WHERE idAlocacao = %s
-            """,
-                (valor,idAlocacao),
-            )
+            cursor.execute(f"""UPDATE Alocacao SET {atributo}= %s
+                WHERE idAlocacao= %s""",(valor, id_alocacao),)
             conn.commit()
         finally:
             cursor.close()
             conn.close()
 
-    def Deletar_Alocacao(self, idAlocacao: int):
-        conn = DatabaseConnector().get_connection()
+    def deletar_alocacao(self, id_alocacao):
+
+        conn = self._get_connection()
+
         try:
             cursor = conn.cursor()
+
             cursor.execute(
                 """
                 DELETE FROM Alocacao
-                WHERE idAlocacao = %s
-            """,
-                (idAlocacao,),
+                WHERE idAlocacao=%s
+                """,
+                (id_alocacao,),
             )
+
             conn.commit()
+
         finally:
             cursor.close()
             conn.close()
 
-    def Listar_Aparelhos_Disponiveis(self, data_inicio, data_fim, marca_desejada):
-        conn = DatabaseConnector().get_connection()
-        try:
-            cursor = conn.cursor()
-            
-            # 1ª TENTATIVA: Buscar disponíveis da MARCA ESPECÍFICA
-            query_marca = """
-                SELECT 
-                    a.id_Aparelho, 
-                    a.patrimonio, 
-                    m.Marca, 
-                    m.Modelo
-                FROM Aparelho a
-                JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
-                WHERE m.Marca = %s 
-                AND a.id_Aparelho NOT IN (
-                    SELECT id_Aparelho 
-                    FROM Alocacao 
-                    WHERE DataAlocacao < %s 
-                    AND DataDevolucao > %s
-                );
-            """
-            
-            # Executa passando a marca, data_fim e data_inicio
-            cursor.execute(query_marca, (marca_desejada, data_fim, data_inicio))
-            resultado = cursor.fetchall()
-            
-            # Se encontrou aparelhos da marca desejada, já retorna eles
-            if resultado:
-                return resultado
-                
-            # 2ª TENTATIVA: Se não achou nenhum daquela marca, busca QUALQUER marca disponível
-            print(f"Nenhum aparelho da marca '{marca_desejada}' disponível. Buscando alternativas...")
-            
-            query_geral = """
-                SELECT 
-                    a.id_Aparelho, 
-                    a.patrimonio, 
-                    m.Marca, 
-                    m.Modelo
-                FROM Aparelho a
-                JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
-                WHERE a.id_Aparelho NOT IN (
-                    SELECT id_Aparelho 
-                    FROM Alocacao 
-                    WHERE DataAlocacao < %s 
-                    AND DataDevolucao > %s
-                );
-            """
-            
-            cursor.execute(query_geral, (data_fim, data_inicio))
-            return cursor.fetchall()
-
-        except Exception as e:
-            print(f"Erro ao listar aparelhos disponíveis: {e}")
-            return []
-            
-        finally:
-            cursor.close()
-            conn.close()
-
+    
 repoAlocacao = AlocacaoRepository()

@@ -5,6 +5,8 @@ from views.cores import minhas_cores
 
 from views.gerenciarMarcaView import gerenciarMarcaView
 from views.editarModeloView import editarModelosView
+from views.criarNovoModeloView import criarNovoModeloView
+from views.removerModeloView import removerModelosView
 
 from services.modeloService import modeloServ
 
@@ -36,15 +38,10 @@ class gerenciarModelosView:
                 print(modeloServ.listarModelos())
                 input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Modelo":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")    
+                criarNovoModeloView().criar_modelo()    
             elif opcao == "Editar Modelos":
                editarModelosView().editar_modelo()
-            elif opcao == "Ver Modelos Cadastrados": 
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
             elif opcao == "Deletar Modelos":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+                removerModelosView().remover_modelo()
             elif opcao == "Voltar":
                 break

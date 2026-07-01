@@ -19,7 +19,7 @@ class AlocacacaoService:
    
 
     def listarAlocacao(self):
-        alocacoes = self.repoAloc.Listar_Alocacao()
+        alocacoes = self.repoAloc.listar_alocacoes()
 
         print("\n======================= RELATÓRIO DE ALOCAÇÕES =======================")
 
@@ -79,5 +79,5 @@ class AlocacacaoService:
         
     
         
-alocacaoServ = AlocacacaoService(repoAlocacao)
+alocacaoServ = AlocacacaoService(repoAlocacao, salaService,userService)
         

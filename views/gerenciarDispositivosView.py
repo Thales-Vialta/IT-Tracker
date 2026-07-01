@@ -4,6 +4,8 @@ from views.cores import CORES
 from views.cores import minhas_cores
 
 from views.gerenciarModelosView import gerenciarModelosView
+from views.criarNovoDispositivo import criarNovoDispositivoView 
+from views.editarDispositivosView import editarDispositivosView
 from services.AparelhoService import aparelhoService
 
 class gerenciarDispositivosView:
@@ -11,7 +13,7 @@ class gerenciarDispositivosView:
     def gerenciar_dispositivos(self):
         while True:
             limpar_tela()
-            print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- GERENCIAR DISPOSITIVOS ---\n{CORES['RESET']}")
+            print(f"{CORES['AZUL']}{CORES['NEGRITO']}---- GERENCIAR DISPOSITIVOS ----\n{CORES['RESET']}")
 
             opcao = questionary.select(
                 "Selecione uma opção:",
@@ -20,6 +22,7 @@ class gerenciarDispositivosView:
                 style=minhas_cores,
                 choices=[
                     "Gerenciar Modelos",
+                    "Mudar Status do Dispositivo",
                     "Ver Dispositivos Cadastrados",
                     "Criar Novo Dispositivo",
                     "Editar Dispositivos",
@@ -30,15 +33,16 @@ class gerenciarDispositivosView:
 
             if opcao == "Gerenciar Modelos":
                 gerenciarModelosView().gerenciar_modelos()
+            elif opcao == "Mudar Status do Dispositivo":
+                print("Gerenciar aparelhos em desenvolvimento")
+                input("enter")
             elif opcao == "Ver Dispositivos Cadastrados":
                 print(aparelhoService.listar_aparelhos())    
                 input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Novo Dispositivo":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
-            elif opcao == "Editar Dispositivos": 
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
+                criarNovoDispositivoView().criar_dispositivo()
+            elif opcao == "Editar Dispositivos":             
+                editarDispositivosView().editar_dispositivo()
             elif opcao == "Deletar Dispositivos":
                 print("Manutenção em desenvolvimento")
                 input("enter")

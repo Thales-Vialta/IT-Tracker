@@ -1,5 +1,4 @@
 from dbConnector.Database import DatabaseConnector
-from models.cargos import *
 
 class CargoRepository:
 

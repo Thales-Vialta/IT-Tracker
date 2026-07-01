@@ -1,4 +1,4 @@
-from models.salas import Sala
+from models.salas import Salas
 from repositories.salaRepository import salaRepo
 
 from  views.limparTela import limpar_tela
@@ -7,7 +7,8 @@ from views.cores import CORES
 class salaService:
 
     def __init__(self, sala_repository):
-        self.sala_repo = sala_repository
+        self.Salas_repo = sala_repository
+
 
     def listarSalas(self):
         limpar_tela()
@@ -40,7 +41,7 @@ class salaService:
         if not validacao:
             return "Sala já cadastrada!"
         else:
-            nova_sala = Sala(NomeSala, EnderecoSala)
+            nova_sala = Salas(NomeSala, EnderecoSala)
             novoNome = nova_sala.NomeSala
             novaDic = nova_sala.EnderecoSala
             self.sala_repo.Inserir_Sala(novoNome, novaDic)

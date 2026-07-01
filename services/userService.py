@@ -25,7 +25,13 @@ class usuarioService:
         if not validacao:
             return " já cadastrado!"
         else:
-            idCargo = self.cargo_service.buscarIdCargo(cargo) 
+            idCargo = self.cargo_service.buscarIdCargo(cargo)
+
+            user = Usuario(nomeUsuario,cargo)
+
+            nome = user.nomeUsuario
+            cargo = user.idCargo
+
             self.usuario_repo.inserir_usuario(nomeUsuario, idCargo)
             return " cadastrado com sucesso!"
         

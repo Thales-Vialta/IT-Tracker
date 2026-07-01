@@ -1,0 +1,55 @@
+Traceback (most recent call last):
+  File "C:\Users\Grazy\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Unknown column 'm.Marca' in 'field list'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Grazy\Desktop\Faculdade\Engenharia de Software II\IT-Tracker\main.py", line 5, in <module>
+    tela_inicial.menu_principal()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Grazy\Desktop\Faculdade\Engenharia de Software II\IT-Tracker\views\menuPrincipalView.py", line 55, in menu_principal
+    gerenciarDispositivosView().gerenciar_dispositivos()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Grazy\Desktop\Faculdade\Engenharia de Software II\IT-Tracker\views\gerenciarDispositivosView.py", line 34, in gerenciar_dispositivos
+    print(aparelhoService.listar_aparelhos())
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Grazy\Desktop\Faculdade\Engenharia de Software II\IT-Tracker\services\AparelhoService.py", line 34, in listar_aparelhos
+    aparelhos = self.aparelho_repo.Listar_Todos_Aparelhos()
+  File "c:\Users\Grazy\Desktop\Faculdade\Engenharia de Software II\IT-Tracker\repositories\aparelhosRepository.py", line 31, in Listar_Todos_Aparelhos
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        """SELECT a.id_Aparelho,a.patrimonio,m.Marca,m.Modelo FROM Aparelho a
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    ORDER BY id_Aparelho"""
+    ^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Grazy\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Grazy\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\opentelemetry\context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "C:\Users\Grazy\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1054 (42S22): Unknown column 'm.Marca' in 'field list'
+(venv) PS C:\Users\Grazy\Desktop\Faculdade\Engenharia de Software II\IT-Tracker> 

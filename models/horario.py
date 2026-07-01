@@ -1,9 +1,21 @@
-class Horario:
-    def __init__(self, Descricao: str, HoraInicio: str, HoraFim: str):
-        self.idHorario = None
-        self.Descricao = Descricao
-        self.HoraInicio = HoraInicio
-        self.HoraFim = HoraFim
+class HorarioFuncionamento:
+    def __init__(self, horaAbertura: int, horaFechamento: int, desc: str):
+        # Atributos protegidos do modelo
+        self._horaAbertura = horaAbertura
+        self._horaFechamento = horaFechamento
+        self._descricao = desc
 
-    def __str__(self):
-        return f"Horario [ID: {self.idHorario} | Descrição: {self.Descricao} | Início: {self.HoraInicio} | Fim: {self.HoraFim}]"
+    # --- GETTERS PADRÃO ---
+
+    @property
+    def horaAbertura(self) -> int:
+        return self._horaAbertura
+
+    @property
+    def horaFechamento(self) -> int:
+        return self._horaFechamento
+
+    @property
+    def descricao(self) -> dict:
+        return self._descricao
+

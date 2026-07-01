@@ -1,24 +1,16 @@
 class ModeloAparelho:
-    def ini (self, idModelo: int, marca: str, modelo: str):
+    def __init__(self, idMarca: int, modelo: str):
         # Atributos padrão do modelo
-        self._idModelo = idModelo
-        self._marca = marca
+
+        self._idMarca = idMarca
         self._modelo = modelo
 
-    # --- GETTERS PADRÃO ---
-
     @property
-    def idModelo(self) -> int:
-        return self._idModelo
-
-    @property
-    def marca(self) -> str:
-        return self._marca
+    def idMarca(self) -> str:
+        return self._idMarca
 
     @property
     def modelo(self) -> str:
         return self._modelo
 
-    def mostra(self) -> str:
-        """Retorna os atributos do modelo formatados em texto"""
-        return f"ID: {self._idModelo} | Marca: {self._marca} | Modelo: {self._modelo}"
+    

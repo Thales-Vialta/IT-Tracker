@@ -27,12 +27,13 @@ class AparelhoRepository:
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
-            # trocar essa consulta pra por o modelo dela, fica mais legível no sistema
-            cursor.execute(
-                """SELECT a.id_Aparelho,a.patrimonio,m.Marca,m.Modelo FROM Aparelho a
-            JOIN Modelo_Aparelho m
-            ON a.idModelo=m.idModelo 
-            ORDER BY id_Aparelho"""
+            cursor.execute("""SELECT a.id_Aparelho, a.patrimonio, ma.Marca,  mo.Modelo 
+            FROM Aparelho a
+            INNER JOIN Modelo_Aparelho mo
+            ON a.idModelo = mo.idModelo
+            INNER JOIN Marca ma
+            ON mo.IDMarca = ma.IDMarca
+            ORDER BY mo.Modelo, a.patrimonio;"""
             )
             resultado = cursor.fetchall()
             return resultado
@@ -48,7 +49,8 @@ class AparelhoRepository:
                 """Select * from Aparelho where id_Aparelho like %s""", (idAparelho,)
             )
             resultado = cursor.fetchall()
-            return resultado
+            print(resultado)
+            return f'{resultado}'
         except ValueError:
             print("Erro! Nome vazio")
         except Exception as e:
@@ -76,21 +78,22 @@ class AparelhoRepository:
             cursor.close()
             conn.close()
 
-    def Editar_Aparelho(self, serial: str, idModelo: int, statusAparelho: str):
+    def Editar_Aparelho(self, atributo, valor, id_Aparelho):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute(
-                """UPDATE Aparelhos 
-                           SET patrimonio = %s, idModelo = %s 
-                           WHERE id = %s""",
-                (serial, idModelo, statusAparelho),
-            )
-            resultado = cursor.fetchall()
-            return resultado
+        
+            sql = f"UPDATE Aparelho SET `{atributo}` = %s WHERE id_Aparelho = %s"
+    
+            cursor.execute(sql, (valor, id_Aparelho))
+        
+            conn.commit() 
+            return cursor.rowcount
+    
         finally:
             cursor.close()
             conn.close()
+
 
     def Deletar_Aparelho(self, statusAparelho: str):
         conn = DatabaseConnector().get_connection()
