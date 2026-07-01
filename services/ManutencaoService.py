@@ -13,7 +13,17 @@ class ManutencaoService:
             return 
             
         return aparelhos
-
+    def adicionar_aparelho_na_manutencao(self, id_aparelho,):
+        if not id_aparelho or int(id_aparelho) <= 0:
+            raise ValueError("ID do aparelho inválido.")
+            
+        sucesso = self.repository.Adicionar_na_Manutencao(id_aparelho, )
+        
+        if not sucesso:
+            raise Exception("Não foi possível registrar o aparelho na manutenção.")
+            
+        return "Aparelho registrado na manutenção com sucesso!"
+    
     def obter_quantidade_em_manutencao(self):
         return self.repository.retorna_Total()
 

@@ -3,6 +3,10 @@ from views.limparTela import limpar_tela
 from views.cores import CORES
 from views.cores import minhas_cores
 
+from views.criarNovaReserva import criarNovaReservaView
+from services.alocacaoService import alocacaoService
+from views.editarReservaView import editarReservaView
+from views.deletarReservaView import deletarReservaView
 class gerenciarReservasView:
 
     def gerenciar_reservas(self):
@@ -19,22 +23,19 @@ class gerenciarReservasView:
                     "Ver Reservas (por ID)",
                     "Criar Nova Reserva",
                     "Editar Reservas",
-                    "Deletar Usuários",
+                    "Deletar Reservas",
                     "Voltar"                
                 ]
             ).ask()
 
             if opcao == "Ver Reservas (por ID)":
-                print("Visualizar Reservas em desenvolvimento")
-                input("enter")
+                print(alocacaoService.listarAlocacao())
+                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
             elif opcao == "Criar Nova Reserva":
-                print(" Gerenciar reservas em desenvolvimento")
-                input("enter")
+                criarNovaReservaView().criar_reserva()
             elif opcao == "Editar Reservas": 
-                print("Gerenciar aparelhos em desenvolvimento")
-                input("enter")
+                editarReservaView().editar_Reserva()
             elif opcao == "Deletar Reservas":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+                deletarReservaView().deletar_Reserva()
             elif opcao == "Voltar":
                 break

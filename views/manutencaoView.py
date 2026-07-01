@@ -57,9 +57,25 @@ class ManutencaoView:
             
             elif opcao == "Adicionar Aparelho na Manutenção":
                 limpar_tela()
-                print(f"{CORES['AZUL']}{CORES['NEGRITO']}---- ADICIONAR DISPOSTIVO ----\n{CORES['RESET']}")
-                input(f"{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
+                print(f"{CORES['AZUL']}{CORES['NEGRITO']}---- ADICIONAR DISPOSITIVO NA MANUTENÇÃO ----\n{CORES['RESET']}")
+    
+                try:
+                    id_input = input("Digite o ID do aparelho que deseja colocar em manutenção (ou Enter para voltar): ").strip()
+        
+                    if not id_input:
+                        print(f"\n{CORES['VERMELHO']}Operação cancelada.{CORES['RESET']}")
+                    else:
+                        id_aparelho = int(id_input)
+            
+                        mensagem_sucesso = manutencaoServe.adicionar_aparelho_na_manutencao(id_aparelho)
+                        print(f"\n{CORES['VERDE']}{CORES['NEGRITO']}{mensagem_sucesso}{CORES['RESET']}")
 
+                except ValueError:
+                    print(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Erro: Por favor, digite um número de ID válido.{CORES['RESET']}")
+                except Exception as e:
+                    print(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Erro: {e}{CORES['RESET']}")
+    
+                input(f"\n{CORES['NEGRITO']}Pressione Enter para continuar...{CORES['RESET']}")
 
             elif opcao == "Liberar Aparelho da Manutenção":
                 limpar_tela()

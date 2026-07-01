@@ -3,7 +3,6 @@ from views.limparTela import limpar_tela
 from views.cores import CORES, minhas_cores
 from services.AparelhoService import aparelhoService
 
-# Importamos o modeloService para buscar os modelos cadastrados no banco
 from services.modeloService import modeloServ
 
 class EditarDispositivosView:
@@ -12,7 +11,6 @@ class EditarDispositivosView:
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- EDITAR DISPOSITIVO ---\n{CORES['RESET']}")
 
-        # 1. PASSO: Selecionar o Modelo para filtrar a busca posterior
         modelos_banco = modeloServ.modeloReposit.buscar_Modelo("%")
 
         if not modelos_banco:
@@ -37,17 +35,11 @@ class EditarDispositivosView:
         if modelo_selecionado == "Cancelar" or not modelo_selecionado:
             return
 
-        # Extrai o ID do modelo escolhido
         id_modelo_filtro = int(modelo_selecionado.split("[ID: ")[1].replace("]", ""))
 
-        # 2. PASSO: Listar os aparelhos e filtrar apenas os que batem com o ID do Modelo selecionado
         todos_aparelhos = aparelhoService.aparelho_repo.Listar_Todos_Aparelhos()
         
-        # Filtramos a lista vinda do repositório em tempo de execução
-        # Procuramos o nome do modelo na tupla ou alteramos para buscar pelo ID se a query trouxer.
-        # Como o seu Listar_Todos_Aparelhos retorna (id_Aparelho, patrimonio, Marca, Modelo),
-        # vamos filtrar comparando o nome do modelo/marca ou buscando compatibilidade.
-        nome_modelo_puro = modelo_selecionado.split(" (")[0] # Pega "Galaxy S23" por exemplo
+        nome_modelo_puro = modelo_selecionado.split(" (")[0] 
 
         aparelhos_filtrados = [
             ap for ap in todos_aparelhos if ap[3].strip().lower() == nome_modelo_puro.strip().lower()
@@ -78,10 +70,8 @@ class EditarDispositivosView:
         if aparelho_selecionado == "Cancelar" or not aparelho_selecionado:
             return
 
-        # Extrai o ID do aparelho (dispositivo)
         id_aparelho_alvo = int(aparelho_selecionado.split("[ID Disp: ")[1].replace("]", ""))
 
-        # 3. PASSO: Escolher o campo que será editado (Sem a opção de Status)
         limpar_tela()
         print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- O QUE DESEJA ALTERAR? ---\n{CORES['RESET']}")
         print(f"Dispositivo: {CORES['AMARELO']}{aparelho_selecionado}{CORES['RESET']}\n")
@@ -99,7 +89,6 @@ class EditarDispositivosView:
 
         limpar_tela()
 
-        # 4. PASSO: Processamento das alterações via Service
         if opcao_campo == "Patrimônio (Serial)":
             atributo = "Patrimonio"
             print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- ALTERAR PATRIMÔNIO ---\n{CORES['RESET']}")
@@ -117,7 +106,6 @@ class EditarDispositivosView:
             
             novo_valor = novo_valor.strip()
             
-            # Validação usando a regra do Service
             if aparelhoService.serial_ja_cadastrado(novo_valor):
                 print(f"\n{CORES['VERMELHO']}Erro: Já existe um aparelho cadastrado com o patrimônio '{novo_valor}'!{CORES['RESET']}")
                 input(f"\n{CORES['VERMELHO']}{CORES['NEGRITO']}Voltar{CORES['RESET']}")
@@ -127,7 +115,6 @@ class EditarDispositivosView:
             atributo = "idModelo"
             print(f"{CORES['AZUL']}{CORES['NEGRITO']}--- SELECIONE O NOVO MODELO ---\n{CORES['RESET']}")
             
-            # Exibe novamente a lista de modelos do banco para ele escolher o novo destino
             opcoes_novos_modelos = [opt for opt in opcoes_modelos if opt != "Cancelar"]
             
             novo_modelo_escolhido = questionary.select(
@@ -143,7 +130,6 @@ class EditarDispositivosView:
 
             novo_valor = int(novo_modelo_escolhido.split("[ID: ")[1].replace("]", ""))
 
-        # Execução final no banco de dados usando o Service
         limpar_tela()
         try:
             aparelhoService.atualizar_aparelho(atributo, novo_valor, id_aparelho_alvo)

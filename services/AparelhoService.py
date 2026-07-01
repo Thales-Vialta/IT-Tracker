@@ -79,23 +79,25 @@ class AparelhoService:
     
 
     def atualizar_aparelho(self, atributo: str, valor, id: int):
-        self.aparelho_repo.Editar_Aparelho(atributo,valor)
-        pass
-
-
+        self.aparelho_repo.Editar_Aparelho(atributo,valor,id)
+       
 
     def remover_aparelho(self, id_aparelho: int):
-        aparelho = self.aparelho_repo.Buscar_Aparelho(id_aparelho)
-        if not aparelho:
-            return "Erro: Aparelho não encontrado!"
-
-        try:
-            self.aparelho_repo.Deletar_Aparelho(id_aparelho)
-            return "Aparelho removido com sucesso!"
+            # Garante que o ID recebido seja convertido para inteiro puro
+            id_limpo = int(id_aparelho)
             
-        except Exception as e:
-            print(e)
-            return "Erro: Não foi possível remover o aparelho. Certifique-se de que ele não possui alocações vinculadas."
+            aparelho = self.aparelho_repo.Buscar_Aparelho(id_limpo)
+            if not aparelho:
+                return "Erro: Aparelho não encontrado!"
+
+            try:
+                # Passa o ID numérico perfeitamente limpo
+                self.aparelho_repo.Deletar_Aparelho(id_limpo)
+                return "Aparelho removido com sucesso!"
+                
+            except Exception as e:
+                print(f"Exceção capturada no service: {e}")
+                return "Erro: Não foi possível remover o aparelho. Certifique-se de que ele não possui alocações vinculadas."
 
     def mostra_aparelhos_disponiveis(self, marca=None):
         aparelhosDisp = self.aparelho_repo.Listar_Aparelhos_Disponiveis(marca)

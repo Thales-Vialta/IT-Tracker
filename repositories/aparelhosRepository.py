@@ -94,14 +94,14 @@ class AparelhoRepository:
             conn.close()
 
 
-    def Deletar_Aparelho(self, statusAparelho: str):
+    def Deletar_Aparelho(self, idAparelho: str):
         conn = DatabaseConnector().get_connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
                 """Delete from Aparelho
                                WHERE id_Aparelho = %s""",
-                (statusAparelho,)
+                (idAparelho,)
             )
             conn.commit()
             return True
@@ -115,35 +115,35 @@ class AparelhoRepository:
         try:
             cursor = conn.cursor()
             
-            # 1. Se a marca foi informada, tenta buscar os disponíveis dela primeiro
+            # 1. Se a marca foi informada
             if marca and marca.strip():
                 query_marca = """
                     SELECT 
                         a.id_Aparelho, 
                         a.patrimonio, 
-                        m.Marca, 
+                        ma.Marca, 
                         m.Modelo
                     FROM Aparelho a
                     JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
-                    WHERE m.Marca = %s 
+                    JOIN Marca ma ON m.IDMarca = ma.IDMarca
+                    WHERE ma.Marca = %s 
                     AND a.idStatus = 1;
                 """
                 cursor.execute(query_marca, (marca,))
                 resultado = cursor.fetchall()
-                
-                # Se encontrou aparelhos disponíveis dessa marca, retorna a lista
                 if resultado:
                     return resultado
             
-            # 2. CONTINGÊNCIA: Se a marca for vazia OU se não houver nenhum disponível dela
+            # 2. CONTINGÊNCIA / GERAL (O que está sendo chamado na criação da reserva)
             query_geral = """
                 SELECT 
                     a.id_Aparelho, 
                     a.patrimonio, 
-                    m.Marca, 
+                    ma.Marca, 
                     m.Modelo
                 FROM Aparelho a
                 JOIN Modelo_Aparelho m ON a.idModelo = m.idModelo
+                JOIN Marca ma ON m.IDMarca = ma.IDMarca
                 WHERE a.idStatus = 1;
             """
             cursor.execute(query_geral)

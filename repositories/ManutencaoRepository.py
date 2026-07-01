@@ -53,5 +53,26 @@ class ManutencaoRepository:
         finally:
             cursor.close()
             conn.close()
-
+    def Adicionar_na_Manutencao(self, id_aparelho):
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+            """UPDATE Aparelho 
+               SET idStatus = 3 
+               WHERE id_Aparelho = %s AND (idStatus = 1 OR idStatus = 2)""", # Parênteses adicionados aqui!
+            (id_aparelho,),
+        )
+        
+            conn.commit()
+        
+        # Retorna True se pelo menos 1 linha foi alterada, senão False
+            return cursor.rowcount > 0
+        
+        except Exception as e:
+            print(f"Erro ao colocar aparelho na manutenção: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
 ManutencaoRepo = ManutencaoRepository()
