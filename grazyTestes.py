@@ -16,4 +16,4 @@ from services.salaService import salaService
 print(userService.buscaUsuario('Malena 0202'))"""
 
 # Exemplo: Mudando os aparelhos da Alocação ID 14 para os aparelhos 1, 5 e 10
-print(alocacaoService.editarAlocacao(14, 'Aparelho', [6,7,8]))
+print(alocacaoService.editarAlocacao(14, 'Usuario', 'Lola'))

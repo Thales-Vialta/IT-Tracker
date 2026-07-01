@@ -148,26 +148,23 @@ class AlocacaoRepository:
             conn.close()
     
 
-    def editar_alocacao_principal(self, coluna: str, valor, id_alocacao: int):
+    def Listar_Aparelhos_Disponiveis(self, marca=None):
             conn = DatabaseConnector().get_connection()
             try:
                 cursor = conn.cursor()
-                # Injetamos o nome da coluna de forma segura usando f-string apenas para a estrutura,
-                # e o valor (dado do usuário) via %s de forma protegida contra SQL Injection
-                query = f"UPDATE Alocacao SET {coluna} = %s WHERE idAlocacao = %s;"
-                cursor.execute(query, (valor, id_alocacao))
-                conn.commit()
-            finally:
-                cursor.close()
-                conn.close()    
-
-    def limpar_itens_alocacao(self, id_alocacao: int):
-            conn = DatabaseConnector().get_connection()
-            try:
-                cursor = conn.cursor()
-                query = "DELETE FROM Item_Alocacao WHERE ID_Alocacao = %s;"
-                cursor.execute(query, (id_alocacao,))
-                conn.commit()
+                query = """
+                    SELECT 
+                        a.id_Aparelho,
+                        a.patrimonio,
+                        ma.Marca,
+                        mo.Modelo
+                    FROM Aparelho a
+                    JOIN Modelo_Aparelho mo ON a.idModelo = mo.idModelo
+                    JOIN Marca ma ON mo.IDMarca = ma.IDMarca
+                    WHERE a.idStatus = 1; -- 1 = Disponível
+                """
+                cursor.execute(query)
+                return cursor.fetchall()
             finally:
                 cursor.close()
                 conn.close()
