@@ -128,8 +128,7 @@ class AlocacaoRepository:
         conn = self.faz_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute(f"""UPDATE Alocacao SET {atributo}= %s
-                WHERE idAlocacao= %s""",(valor, id_alocacao),)
+            cursor.execute(f"""UPDATE Alocacao SET {atributo} = %s WHERE idAlocacao = %s""",(valor, id_alocacao),)
             conn.commit()
         finally:
             cursor.close()
@@ -137,7 +136,7 @@ class AlocacaoRepository:
 
     def deletar_alocacao(self, id_alocacao):
 
-        conn = self._get_connection()
+        conn = self.faz_connection()
 
         try:
             cursor = conn.cursor()

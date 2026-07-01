@@ -7,7 +7,7 @@ from views.cores import CORES
 class salaService:
 
     def __init__(self, sala_repository):
-        self.Salas_repo = sala_repository
+        self.sala_repo = sala_repository
 
 
     def listarSalas(self):

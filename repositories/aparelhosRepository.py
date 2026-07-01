@@ -49,8 +49,7 @@ class AparelhoRepository:
                 """Select * from Aparelho where id_Aparelho like %s""", (idAparelho,)
             )
             resultado = cursor.fetchall()
-            print(resultado)
-            return f'{resultado}'
+            return resultado # <--- CORRIGIDO: Retorna a lista pura, sem f-string
         except ValueError:
             print("Erro! Nome vazio")
         except Exception as e:
@@ -100,12 +99,13 @@ class AparelhoRepository:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """Delete from Aparelhos 
+                """Delete from Aparelho
                                WHERE id_Aparelho = %s""",
-                (statusAparelho),
+                (statusAparelho,)
             )
-            resultado = cursor.fetchall()
-            return resultado
+            conn.commit()
+            return True
+            
         finally:
             cursor.close()
             conn.close()
@@ -156,6 +156,24 @@ class AparelhoRepository:
         finally:
             cursor.close()
             conn.close()
+
+    def Buscar_Aparelho_Por_Serial(self, serial: str):
+            conn = DatabaseConnector().get_connection()
+            try:
+                cursor = conn.cursor()
+                # Busca na tabela Aparelho onde a coluna Patrimonio bate com o serial enviado
+                cursor.execute(
+                    """SELECT * FROM Aparelho WHERE Patrimonio = %s;""", (serial,)
+                )
+                resultado = cursor.fetchall()
+                return resultado # Retorna a lista pura de tuplas
+                
+            except Exception as e:
+                print(f"Erro ao buscar aparelho por serial: {e}")
+                return []
+            finally:
+                cursor.close()
+                conn.close()
 
 repoAp = AparelhoRepository()
 

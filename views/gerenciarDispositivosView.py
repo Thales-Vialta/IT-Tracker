@@ -5,7 +5,8 @@ from views.cores import minhas_cores
 
 from views.gerenciarModelosView import gerenciarModelosView
 from views.criarNovoDispositivo import criarNovoDispositivoView 
-from views.editarDispositivosView import editarDispositivosView
+from views.editarDispositivosView import EditarDispositivosView
+from views.removerDispositivoView import removerDispositivosView
 from services.AparelhoService import aparelhoService
 
 class gerenciarDispositivosView:
@@ -42,9 +43,8 @@ class gerenciarDispositivosView:
             elif opcao == "Criar Novo Dispositivo":
                 criarNovoDispositivoView().criar_dispositivo()
             elif opcao == "Editar Dispositivos":             
-                editarDispositivosView().editar_dispositivo()
+                EditarDispositivosView().editar_dispositivo()
             elif opcao == "Deletar Dispositivos":
-                print("Manutenção em desenvolvimento")
-                input("enter")
+                removerDispositivosView().remover_dispositivo()
             elif opcao == "Voltar":
                 break
