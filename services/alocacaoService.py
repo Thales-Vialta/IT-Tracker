@@ -152,20 +152,7 @@ class AlocacacaoService:
 
                 # Agora o 'valor' já virou o número inteiro correto (ID) antes de ir para o banco!
                 self.repoAloc.editar_alocacao_principal(coluna_mysql, valor, id_alocacao)
-                return f"Sucesso! O campo '{atributo}' da alocação #{id_alocacao} foi atualizado para o ID {valor}."
-
-    def editar_alocacao_principal(self, coluna: str, valor, id_alocacao: int):
-        conn = DatabaseConnector().get_connection()
-        try:
-            cursor = conn.cursor()
-            # Injetamos o nome da coluna de forma segura usando f-string apenas para a estrutura,
-            # e o valor (dado do usuário) via %s de forma protegida contra SQL Injection
-            query = f"UPDATE Alocacao SET {coluna} = %s WHERE idAlocacao = %s;"
-            cursor.execute(query, (valor, id_alocacao))
-            conn.commit()
-        finally:
-            cursor.close()
-            conn.close()       
+                return f"Sucesso! O campo '{atributo}' da alocação #{id_alocacao} foi atualizado para o ID {valor}."     
 
     def removerAlocacao(self, id_alocacao):
         self.repoAloc.deletar_alocacao(id_alocacao)
