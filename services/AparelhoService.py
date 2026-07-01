@@ -100,11 +100,18 @@ class AparelhoService:
                 return "Erro: Não foi possível remover o aparelho. Certifique-se de que ele não possui alocações vinculadas."
 
     def mostra_aparelhos_disponiveis(self, marca=None):
-        aparelhosDisp = self.aparelho_repo.Listar_Aparelhos_Disponiveis(marca)
-        listaDisp = ''
-        for id_ap, patrimonio, marca, modelo in aparelhosDisp:
-            listaDisp = f"ID: {id_ap} | Pat: {patrimonio} | {marca} - {modelo}"
-        return listaDisp
+            aparelhosDisp = self.aparelho_repo.Listar_Aparelhos_Disponiveis(marca)
+            
+            # Se o banco não trouxer nada, avisa o usuário de forma limpa
+            if not aparelhosDisp:
+                return "Nenhum aparelho disponível no momento.\n"
+                
+            listaDisp = ''
+            for id_ap, patrimonio, marca_nome, modelo in aparelhosDisp:
+                # 🌟 CORRIGIDO: Usando += para acumular e \n para quebrar a linha a cada aparelho
+                listaDisp += f"ID: {id_ap} | Pat: {patrimonio} | {marca_nome} - {modelo}\n"
+                
+            return listaDisp
     
     def validaId_Disponivel(self, marca, id):
         aparelhosDisp = self.aparelho_repo.Listar_Aparelhos_Disponiveis()
