@@ -17,17 +17,22 @@ class StatusRepository:
             conn.close()
 
 
-    def editar_status(self, idAparelho:int, idStatus:int):
-        conn = DatabaseConnector().get_connection()
-        try:
-            cursor = conn.cursor()
+    def editar_status(self, idAparelho: int, idStatus: int):
+            conn = DatabaseConnector().get_connection()
+            try:
+                cursor = conn.cursor()
 
-            cursor.execute("""UPDATE Aparelho SET idStatus = %s WHERE id_Aparelho = %s """, (idStatus, idAparelho))
-            resultado = cursor.fetchall()
-            return resultado
-        finally:
-            cursor.close()
-            conn.close()
+                cursor.execute(
+                    """UPDATE Aparelho SET idStatus = %s WHERE id_Aparelho = %s""", 
+                    (idStatus, idAparelho) # Ordem dos %s: 1º idStatus, 2º id_Aparelho
+                )
+                
+                conn.commit() # 💡 O PULO DO GATO: Salva a alteração no banco de dados!
+                return True   # Retorna apenas True para indicar que deu certo
+                
+            finally:
+                cursor.close()
+                conn.close()
 
     def Mostrar_Novo_Status(self,idAparelho: int): 
         conn = DatabaseConnector().get_connection()
@@ -100,7 +105,43 @@ class StatusRepository:
                 cursor.close()
                 conn.close()
 
+    def buscar_aparelhos_alocados_no_intervalo(self, data_inicio: str, data_fim: str):
+            conn = DatabaseConnector().get_connection()
+            try:
+                cursor = conn.cursor()
+                # Query corrigida fazendo o JOIN entre Alocacao e Item_Alocacao
+                query = """
+                    SELECT DISTINCT item.ID_Aparelho 
+                    FROM Item_Alocacao item
+                    INNER JOIN Alocacao aloc ON item.ID_Alocacao = aloc.idAlocacao
+                    WHERE NOT (%s >= aloc.DataDevolucao OR %s <= aloc.DataAlocacao)
+                """
+                cursor.execute(query, (data_inicio, data_fim))
+                resultado = cursor.fetchall() 
+                return resultado # Retorna a lista de tuplas ex: [(1,), (5,)]
+            finally:
+                cursor.close()
+                conn.close()
 
-  
+    def atualizar_status_em_lote(self, lista_ids: list, novo_status: int):
+        if not lista_ids:
+            return
+            
+        conn = DatabaseConnector().get_connection()
+        try:
+            cursor = conn.cursor()
+            format_strings = ', '.join(['%s'] * len(lista_ids))
+            # Ajustado para usar o nome real da chave primária: id_Aparelho
+            query = f"""
+                UPDATE Aparelho 
+                SET idStatus = %s 
+                WHERE id_Aparelho IN ({format_strings})
+            """
+            parametros = [novo_status] + lista_ids
+            cursor.execute(query, parametros)
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
 
 statusRepo = StatusRepository()

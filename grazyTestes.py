@@ -2,6 +2,7 @@ from repositories.alocacaoRepository import repoAlocacao
 from services.alocacaoService import alocacaoService
 from services.userService import userService
 from services.salaService import salaService
+from services.StatusService import statusServ
 
 # aloca = repoAlocacao.listar_alocacoes()
 # for i in aloca:
@@ -16,4 +17,5 @@ from services.salaService import salaService
 print(userService.buscaUsuario('Malena 0202'))"""
 
 # Exemplo: Mudando os aparelhos da Alocação ID 14 para os aparelhos 1, 5 e 10
-print(alocacaoService.editarAlocacao(14, 'Aparelho', [6,7,8]))
+
+statusServ.valideIntervaloAlocacao('2026-07-01 08:00:00','2026-07-01 16:00:00')
